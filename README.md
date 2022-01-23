@@ -8,13 +8,13 @@ https://stackoverflow.com/questions/2029103/correct-way-to-read-a-text-file-into
 http://www.emulator101.com/disassembler-pt-1.html
 
 ## sources:
-http://www.emulator101.com/
-https://www.reddit.com/r/C_Programming/comments/9dzkhw/how_would_one_write_an_emulator_in_c/
-http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
-https://github.com/Gekkio/mooneye-gb
-https://phoenix.goucher.edu/~jillz/cs220/cpuEmulatorTutorial.pdf
-https://stackoverflow.com/questions/1215777/writing-a-graphical-z80-emulator-in-c-or-c
-https://drakeor.com/uploads/8080-Programmers-Manual.pdf
+http://www.emulator101.com/ <br>
+https://www.reddit.com/r/C_Programming/comments/9dzkhw/how_would_one_write_an_emulator_in_c/ <br>
+http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf <br>
+https://github.com/Gekkio/mooneye-gb <br>
+https://phoenix.goucher.edu/~jillz/cs220/cpuEmulatorTutorial.pdf <br>
+https://stackoverflow.com/questions/1215777/writing-a-graphical-z80-emulator-in-c-or-c <br>
+https://drakeor.com/uploads/8080-Programmers-Manual.pdf <br>
 
 ## notes:
 HEX/BIN/DEC:

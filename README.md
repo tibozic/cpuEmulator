@@ -8,6 +8,8 @@ https://stackoverflow.com/questions/2029103/correct-way-to-read-a-text-file-into
 http://www.emulator101.com/disassembler-pt-1.html
 
 ## sources:
+https://web.archive.org/web/20210909190432/http://www.obelisk.me.uk/6502/ <br>
+https://youtu.be/qJgsuQoy9bc <br>
 http://www.emulator101.com/ <br>
 https://www.reddit.com/r/C_Programming/comments/9dzkhw/how_would_one_write_an_emulator_in_c/ <br>
 http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf <br>

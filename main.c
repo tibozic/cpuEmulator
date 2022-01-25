@@ -5,12 +5,8 @@
 
 #define STACK_OFFSET 0x0100
 
-// 2^16
+// 2^16 = 16K
 #define MEMORY_SIZE 1024 * 64
-
-// Instruction opcodes
-#define LDA_IM 0xA9
-#define END 0x0
 
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
@@ -41,6 +37,10 @@ typedef struct
 	BYTE v : 1; // Overflow
 	BYTE n : 1; // Negative
 } CPU;
+
+// Opcodes
+#define LDA_IM 0xA9
+#define END 0x0
 
 // Functions
 void reset_cpu(CPU *cpu, MEMORY *memory);

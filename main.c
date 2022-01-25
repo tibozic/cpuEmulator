@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <assert.h>
@@ -7,8 +8,11 @@
 // 2^16
 #define MEMORY_SIZE 1024 * 64
 
+// Instruction opcodes
+#define LDA_IM 0xA9
+
 typedef unsigned char BYTE;
-typedef short WORD;
+typedef unsigned short WORD;
 
 typedef struct
 {
@@ -50,7 +54,8 @@ int main(void)
 
 	reset_cpu(&cpu, &memory);
 
-	memory.data[0xFFFC] = 0x00FF;
+	memory.data[0xFFFC] = 0x00A9;
+	memory.data[0xFFFD] = 13;
 	execute_instruction(2, &cpu, &memory);
 
 	return 0;
@@ -77,10 +82,18 @@ void initialise_memory(MEMORY *memory)
 
 void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 {
+	BYTE instruction;
+
 	while (clock > 0)
 	{
-		fetch(&clock, cpu, memory);
-		fetch(&clock, cpu, memory);
+		instruction = fetch(&clock, cpu, memory);
+		if (instruction == LDA_IM)
+		{
+			cpu->a = fetch(&clock, cpu, memory);
+			cpu->z = (cpu->a == 0);
+			// Check if 7th bit of cpu-.a is 1
+			cpu->n = ((cpu->a & (1 << 6)) > 0);
+		}
 	}
 }
 
@@ -88,6 +101,6 @@ BYTE fetch(int *clock, CPU *cpu, MEMORY *memory)
 {
 	BYTE data = memory->data[cpu->pc];
 	cpu->pc++;
-	clock--;
+	*clock = *clock - 1;
 	return data;
 }

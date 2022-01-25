@@ -10,6 +10,7 @@
 
 // Instruction opcodes
 #define LDA_IM 0xA9
+#define END 0x0
 
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
@@ -56,7 +57,7 @@ int main(void)
 
 	memory.data[0xFFFC] = 0x00A9;
 	memory.data[0xFFFD] = 13;
-	execute_instruction(2, &cpu, &memory);
+	execute_instruction(3, &cpu, &memory);
 
 	return 0;
 }
@@ -87,7 +88,13 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 	while (clock > 0)
 	{
 		instruction = fetch(&clock, cpu, memory);
-		if (instruction == LDA_IM)
+		if (instruction == END)
+		{
+			printf("Reached the end.\n");
+			clock = 0;
+			break;
+		}
+		else if (instruction == LDA_IM)
 		{
 			cpu->a = fetch(&clock, cpu, memory);
 			cpu->z = (cpu->a == 0);

@@ -88,18 +88,22 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 	while (clock > 0)
 	{
 		instruction = fetch(&clock, cpu, memory);
-		if (instruction == END)
+		switch(instruction)
 		{
-			printf("Reached the end.\n");
-			clock = 0;
-			break;
-		}
-		else if (instruction == LDA_IM)
-		{
-			cpu->a = fetch(&clock, cpu, memory);
-			cpu->z = (cpu->a == 0);
-			// Check if 7th bit of cpu-.a is 1
-			cpu->n = ((cpu->a & (1 << 6)) > 0);
+			case END:
+			{
+				printf("Reached the end.\n");
+				clock = 0;
+				break;
+			}
+			case LDA_IM:
+			{
+				cpu->a = fetch(&clock, cpu, memory);
+				cpu->z = (cpu->a == 0);
+				// Check if 7th bit of cpu-.a is 1
+				cpu->n = ((cpu->a & (1 << 6)) > 0);
+				break;
+			}
 		}
 	}
 }

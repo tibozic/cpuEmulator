@@ -100,7 +100,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 			{
 				cpu->a = fetch(&clock, cpu, memory);
 				cpu->z = (cpu->a == 0);
-				// Check if 7th bit of cpu-.a is 1
+				// Check if 7th bit of cpu->a is 1 (number is negative)
 				cpu->n = ((cpu->a & (1 << 6)) > 0);
 				break;
 			}

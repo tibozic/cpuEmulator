@@ -208,14 +208,14 @@ void write_word(int *clock, WORD address, WORD value, MEMORY *memory)
 	printf("Used 2 clock cycles for writing a word.\n");
 }
 
-void lda_set_flags(CPU *cpu)
+void load_set_flags(CPU *cpu, BYTE register_data)
 {
 	/*
-	 * Sets the appropriate flags when loading to cpu->a register
+	 * Sets the appropriate flags when loading to a register
 	*/
-	cpu->z = (cpu->a == 0);
+	cpu->z = (register_data == 0);
 	// Check if 7th bit of cpu->a is 1 (number is negative)
-	cpu->n = ((cpu->a & (1 << 6)) > 0);
+	cpu->n = ((register_data & (1 << 6)) > 0);
 }
 
 void print_memory(MEMORY *memory, int start, int end)

@@ -44,7 +44,6 @@ typedef struct
 #define INS_LDA_ZPX 0xB5
 #define INS_STA_ZP 0x85
 #define INS_JSR 0x20
-#define END 0x0
 
 // Functions
 void reset_cpu(CPU *cpu, MEMORY *memory);
@@ -113,12 +112,6 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 		instruction = fetch_byte(&clock, cpu, memory);
 		switch(instruction)
 		{
-			case END:
-			{
-				printf("Reached the end.\n");
-				clock = 0;
-				break;
-			}
 			case INS_LDA_IM:
 			{
 				cpu->a = fetch_byte(&clock, cpu, memory);

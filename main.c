@@ -2,14 +2,15 @@
 #include <math.h>
 #include <string.h>
 #include <assert.h>
+#include <stdint.h>
 
 #define STACK_OFFSET 0x0100
 
 // 2^16 = 16K
 #define MEMORY_SIZE 1024 * 64
 
-typedef unsigned char BYTE;
-typedef unsigned short WORD;
+typedef uint8_t BYTE;
+typedef uint16_t WORD;
 
 typedef struct
 {

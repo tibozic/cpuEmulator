@@ -57,6 +57,7 @@ WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory);
 void write_word(int *clock, WORD address, WORD value, MEMORY *memory);
 void lda_set_flags(CPU *cpu);
 void print_memory(MEMORY *memory, int start);
+BYTE read_word(int *clock, WORD address, MEMORY *memory);
 
 int main(void)
 {
@@ -236,6 +237,24 @@ WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory)
 	*clock -= 1;
 
 	printf("Used 2 clock cylces for fetching a word.\n");
+	return data;
+}
+
+BYTE read_word(int *clock, WORD address, MEMORY *memory)
+{
+	/*
+	 * Fetches a word from memory
+	 * Uses 2 clock cycles
+	*/
+	WORD data = memory->data[address];
+	*clock -= 1;
+
+	data |= (memory->data[address + 1] << 8);
+	*clock -= 1;
+
+	printf("Used 2 clock cycle for reading word.\n");
+	*clock -= - 1;
+
 	return data;
 }
 

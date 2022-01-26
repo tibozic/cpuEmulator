@@ -69,12 +69,12 @@ int main(void)
 	reset_cpu(&cpu, &memory);
 
 	/* Start of simple test program */
-	cpu.a = 0x60;
-	memory.data[0xFFFC] = INS_LDA_ABS;
+	cpu.x = 0x04;
+	memory.data[0xFFFC] = INS_LDA_ABSX;
 	memory.data[0xFFFD] = 0x42;
 	memory.data[0xFFFE] = 0x42;
-	memory.data[0x4242] = 0x64;
-	execute_instruction(4, &cpu, &memory);
+	memory.data[0x4246] = 0x64;
+	execute_instruction(5, &cpu, &memory);
 	/* End of simple test program */
 
 	printf("Value of A: 0x%x\n", cpu.a);
@@ -169,7 +169,18 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 			case INS_LDA_ABS:
 			{
 				abs_address = fetch_word(&clock, cpu, memory);
-				printf("Got address: 0x%x\n", abs_address);
+				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
+
+				lda_set_flags(cpu);
+
+				break;
+			}
+			case INS_LDA_ABSX:
+			{
+				// TODO: +1 cycle if page crossed?
+				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address += cpu->x;
+				clock--;
 				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
 
 				lda_set_flags(cpu);

@@ -52,6 +52,8 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory);
 BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory);
 BYTE read_byte(int *clock, BYTE address, MEMORY *memory);
 void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory);
+WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory);
+void write_word(int *clock, WORD address, WORD value, MEMORY *memory);
 void lda_set_flags(CPU *cpu);
 void print_memory(MEMORY *memory, int start);
 
@@ -158,8 +160,9 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
 {
 	/*
-	 * Fetches a byte from memory and uses a clock cycle
-	 * Also increments the program counter
+	 * Fetches a byte from memory
+	 * Uses 1 clock cycle
+	 * Increments the program counter
 	*/
 	BYTE data = memory->data[cpu->pc];
 	cpu->pc++;
@@ -171,8 +174,8 @@ BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
 BYTE read_byte(int *clock, BYTE address, MEMORY *memory)
 {
 	/*
-	 * Fetches a byte from memory and uses a clock cylce
-	 * Does NOT increment the program counter
+	 * Fetches a byte from memory
+	 * Uses 1 clock cylce
 	*/
 	BYTE data = memory->data[address];
 	printf("Used 1 clock cycle for reading byte.\n");
@@ -182,10 +185,48 @@ BYTE read_byte(int *clock, BYTE address, MEMORY *memory)
 
 void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory)
 {
+	/*
+	 * Writes a byte to memory
+	 * Uses 1 clock cycle
+	 * Increments the program counter
+	*/
 	memory->data[address] = cpu->a;
 	cpu->pc++;
 	printf("Used 1 cycle for writing byte.\n");
 	*clock -= 1;
+}
+
+WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory)
+{
+	/*
+	 * Fetches a word from memory
+	 * Uses 2 clock cycles
+	 * Increments the program counter
+	*/
+	// Little endian
+	WORD data = memory->data[cpu->pc];
+	cpu->pc++;
+	*clock -= 1;
+
+	data |= (memory->data[cpu->pc] << 8);
+	cpu->pc++;
+	*clock -= 1;
+
+	printf("Used 2 clock cylces for fetching a word.\n");
+	return data;
+}
+
+void write_word(int *clock, WORD address, WORD value, MEMORY *memory)
+{
+	/*
+	 * Writes a word to memory
+	 * Uses 2 clock cycles
+	*/
+	memory->data[address]		= (value & 0xFF);
+	*clock -= 1;
+	memory->data[address + 1]	= (value >> 8);
+	*clock -= 1;
+	printf("Used 2 clock cycles for writing a word.\n");
 }
 
 void lda_set_flags(CPU *cpu)

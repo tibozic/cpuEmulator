@@ -42,6 +42,7 @@ typedef struct
 #define INS_LDA_IM 0xA9
 #define INS_LDA_ZP 0xA5
 #define INS_LDA_ZPX 0xB5
+#define INS_STA_ZP 0x85
 #define END 0x0
 
 // Functions
@@ -52,6 +53,7 @@ BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory);
 BYTE read_byte(int *clock, BYTE address, MEMORY *memory);
 void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory);
 void lda_set_flags(CPU *cpu);
+void print_memory(MEMORY *memory, int start);
 
 int main(void)
 {
@@ -69,6 +71,7 @@ int main(void)
 	execute_instruction(10, &cpu, &memory);
 	/* End of simple test program */
 
+	print_memory(&memory, MEMORY_SIZE - 5);
 	printf("Value of a: 0x%x\n", cpu.a);
 	printf("Value of address 0x42: 0x%x\n", memory.data[0x42]);
 
@@ -193,4 +196,12 @@ void lda_set_flags(CPU *cpu)
 	cpu->z = (cpu->a == 0);
 	// Check if 7th bit of cpu->a is 1 (number is negative)
 	cpu->n = ((cpu->a & (1 << 6)) > 0);
+}
+
+void print_memory(MEMORY *memory, int start)
+{
+	for (int i = start; i < MEMORY_SIZE; ++i)
+	{
+		printf("MEMORY[0x%x] = 0x%x\n", i, memory->data[i]);
+	}
 }

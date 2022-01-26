@@ -67,12 +67,11 @@ int main(void)
 
 	/* Start of simple test program */
 	cpu.a = 0x60;
-	memory.data[0xFFFC] = INS_JSR;
+	memory.data[0xFFFC] = INS_LDA_ABS;
 	memory.data[0xFFFD] = 0x42;
 	memory.data[0xFFFE] = 0x42;
-	memory.data[0x4242] = INS_LDA_IM;
-	memory.data[0x4243] = 0x84;
-	execute_instruction(9, &cpu, &memory);
+	memory.data[0x4242] = 0x64;
+	execute_instruction(4, &cpu, &memory);
 	/* End of simple test program */
 
 	// print_memory(&memory, MEMORY_SIZE - 5);
@@ -163,6 +162,16 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 				clock--;
 				cpu->pc = abs_address;
 				clock--;
+				break;
+			}
+			case INS_LDA_ABS:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+				printf("Got address: 0x%x\n", abs_address);
+				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
+
+				lda_set_flags(cpu);
+
 				break;
 			}
 			default:

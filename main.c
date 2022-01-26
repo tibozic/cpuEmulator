@@ -56,7 +56,7 @@ void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory);
 WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory);
 void write_word(int *clock, WORD address, WORD value, MEMORY *memory);
 void lda_set_flags(CPU *cpu);
-void print_memory(MEMORY *memory, int start);
+void print_memory(MEMORY *memory, int start, int end);
 BYTE read_word(int *clock, WORD address, MEMORY *memory);
 
 int main(void)
@@ -75,7 +75,6 @@ int main(void)
 	execute_instruction(4, &cpu, &memory);
 	/* End of simple test program */
 
-	// print_memory(&memory, MEMORY_SIZE - 5);
 	printf("Value of A: 0x%x\n", cpu.a);
 
 	return 0;
@@ -284,9 +283,10 @@ void lda_set_flags(CPU *cpu)
 	cpu->n = ((cpu->a & (1 << 6)) > 0);
 }
 
-void print_memory(MEMORY *memory, int start)
+void print_memory(MEMORY *memory, int start, int end)
 {
-	for (int i = start; i < MEMORY_SIZE; ++i)
+	assert(end <= MEMORY_SIZE);
+	for (int i = start; i < end; ++i)
 	{
 		printf("MEMORY[0x%x] = 0x%x\n", i, memory->data[i]);
 	}

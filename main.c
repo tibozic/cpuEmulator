@@ -50,6 +50,7 @@ void initialise_memory(MEMORY *memory);
 void execute_instruction(int clock, CPU *cpu, MEMORY *memory);
 BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory);
 BYTE read_byte(int *clock, BYTE address, MEMORY *memory);
+void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory);
 void lda_set_flags(CPU *cpu);
 
 int main(void)
@@ -60,14 +61,16 @@ int main(void)
 	reset_cpu(&cpu, &memory);
 
 	/* Start of simple test program */
-	memory.data[0xFFFC] = INS_LDA_ZPX;
+	cpu.a = 0x60;
+	memory.data[0xFFFC] = INS_STA_ZP;
 	memory.data[0xFFFD] = 0x42;
-	cpu.x = 0x01;
-	memory.data[0x43] = 0x23;
-	execute_instruction(3, &cpu, &memory);
+	memory.data[0xFFFE] = INS_LDA_ZP;
+	memory.data[0xFFFF] = 0x42;
+	execute_instruction(10, &cpu, &memory);
 	/* End of simple test program */
 
-	printf("Value in a: %d\n", cpu.a);
+	printf("Value of a: 0x%x\n", cpu.a);
+	printf("Value of address 0x42: 0x%x\n", memory.data[0x42]);
 
 	return 0;
 }
@@ -136,6 +139,15 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_STA_ZP:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+				memory->data[zp_address] = cpu->a;
+
+				write_byte(&clock, zp_address, cpu, memory);
+
+				break;
+			}
 		}
 	}
 }
@@ -148,6 +160,7 @@ BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
 	*/
 	BYTE data = memory->data[cpu->pc];
 	cpu->pc++;
+	printf("Used 1 clock cycle for fetching byte.\n");
 	*clock -= 1;
 	return data;
 }
@@ -159,8 +172,17 @@ BYTE read_byte(int *clock, BYTE address, MEMORY *memory)
 	 * Does NOT increment the program counter
 	*/
 	BYTE data = memory->data[address];
+	printf("Used 1 clock cycle for reading byte.\n");
 	*clock -= - 1;
 	return data;
+}
+
+void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory)
+{
+	memory->data[address] = cpu->a;
+	cpu->pc++;
+	printf("Used 1 cycle for writing byte.\n");
+	*clock -= 1;
 }
 
 void lda_set_flags(CPU *cpu)

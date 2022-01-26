@@ -3,6 +3,10 @@
 -6502 <br>
 -8080 <br>
 
+## More info
+The CPU we are emulating is 6502. <br>
+This CPU is little endian. <br>
+
 ## currently at:
 https://stackoverflow.com/questions/2029103/correct-way-to-read-a-text-file-into-a-buffer-in-c
 http://www.emulator101.com/disassembler-pt-1.html
@@ -25,6 +29,6 @@ bin: 0b10
 dec: default
 
 ### CPU (8080):
-5 registers (A, B, C, D, E) -> like variables
-program counter (PC) -> like a pointer
-the time of to run an instruction is given by manufacturer (in cycles) -> move takes 1 cycle
+5 registers (A, B, C, D, E) -> like variables <br>
+program counter (PC) -> like a pointer <br>
+the time of to run an instruction is given by manufacturer (in cycles) -> move takes 1 cycle <br>

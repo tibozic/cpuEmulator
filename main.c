@@ -43,6 +43,7 @@ typedef struct
 #define INS_LDA_ZP 0xA5
 #define INS_LDA_ZPX 0xB5
 #define INS_STA_ZP 0x85
+#define INS_JSR 0x20
 #define END 0x0
 
 // Functions
@@ -66,16 +67,16 @@ int main(void)
 
 	/* Start of simple test program */
 	cpu.a = 0x60;
-	memory.data[0xFFFC] = INS_STA_ZP;
+	memory.data[0xFFFC] = INS_JSR;
 	memory.data[0xFFFD] = 0x42;
-	memory.data[0xFFFE] = INS_LDA_ZP;
-	memory.data[0xFFFF] = 0x42;
-	execute_instruction(10, &cpu, &memory);
+	memory.data[0xFFFE] = 0x42;
+	memory.data[0x4242] = INS_LDA_IM;
+	memory.data[0x4243] = 0x84;
+	execute_instruction(9, &cpu, &memory);
 	/* End of simple test program */
 
-	print_memory(&memory, MEMORY_SIZE - 5);
-	printf("Value of a: 0x%x\n", cpu.a);
-	printf("Value of address 0x42: 0x%x\n", memory.data[0x42]);
+	// print_memory(&memory, MEMORY_SIZE - 5);
+	printf("Value of A: 0x%x\n", cpu.a);
 
 	return 0;
 }
@@ -84,7 +85,8 @@ void reset_cpu(CPU *cpu, MEMORY *memory)
 {
 	cpu->pc = 0xFFFC;
 
-	cpu->sp = 0x00FF;
+	// With stack offset this is 0x01FF
+	cpu->sp = 0xFF;
 
 	cpu->d = 0;
 
@@ -103,6 +105,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 {
 	BYTE instruction;
 	BYTE zp_address;
+	WORD abs_address;
 
 	while (clock > 0)
 	{
@@ -128,6 +131,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 				zp_address = fetch_byte(&clock, cpu, memory);
 
 				cpu->a = read_byte(&clock, zp_address, memory);
+
 				lda_set_flags(cpu);
 
 				break;
@@ -147,10 +151,29 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 			case INS_STA_ZP:
 			{
 				zp_address = fetch_byte(&clock, cpu, memory);
+
 				memory->data[zp_address] = cpu->a;
 
 				write_byte(&clock, zp_address, cpu, memory);
 
+				break;
+			}
+			case INS_JSR:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+				write_word(&clock,
+						   STACK_OFFSET + cpu->sp,
+						   cpu->pc - 1,
+						   memory);
+				cpu->sp--;
+				clock--;
+				cpu->pc = abs_address;
+				clock--;
+				break;
+			}
+			default:
+			{
+				printf("Instruction unknown: 0x%x\n", instruction);
 				break;
 			}
 		}

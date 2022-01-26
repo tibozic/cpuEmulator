@@ -276,7 +276,7 @@ void write_word(int *clock, WORD address, WORD value, MEMORY *memory)
 void lda_set_flags(CPU *cpu)
 {
 	/*
-	 * Sets the appropriate flagsa when loading to cpu->a register
+	 * Sets the appropriate flags when loading to cpu->a register
 	*/
 	cpu->z = (cpu->a == 0);
 	// Check if 7th bit of cpu->a is 1 (number is negative)

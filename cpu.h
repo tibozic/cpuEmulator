@@ -57,7 +57,7 @@ void initialise_memory(MEMORY *memory);
 void execute_instruction(int clock, CPU *cpu, MEMORY *memory);
 BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory);
 BYTE read_byte(int *clock, BYTE address, MEMORY *memory);
-void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory);
+void write_byte(int *clock, BYTE address, BYTE value, CPU *cpu, MEMORY *memory);
 WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory);
 void write_word(int *clock, WORD address, WORD value, MEMORY *memory);
 void load_set_flags(CPU *cpu, BYTE register_data);

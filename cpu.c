@@ -67,7 +67,46 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 
 				memory->data[zp_address] = cpu->a;
 
-				write_byte(&clock, zp_address, cpu, memory);
+				write_byte(&clock, zp_address, cpu->a, cpu, memory);
+
+				break;
+			}
+			case INS_LDX_IM:
+			{
+				cpu->a = fetch_byte(&clock, cpu, memory);
+
+				load_set_flags(cpu, cpu->x);
+
+				break;
+			}
+			case INS_LDX_ZP:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				cpu->a = read_byte(&clock, zp_address, memory);
+
+				load_set_flags(cpu, cpu->x);
+
+				break;
+			}
+			case INS_LDX_ZPX:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				zp_address += cpu->x;
+				clock--;
+
+				cpu->a = read_byte(&clock, zp_address, memory);
+				load_set_flags(cpu, cpu->x);
+
+				break;
+			}
+			case INS_LDX_ABS:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
+
+				load_set_flags(cpu, cpu->x);
 
 				break;
 			}
@@ -84,28 +123,6 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 
 				cpu->pc = abs_address;
 				clock--;
-
-				break;
-			}
-			case INS_LDA_ABS:
-			{
-				abs_address = fetch_word(&clock, cpu, memory);
-				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
-
-				lda_set_flags(cpu);
-
-				break;
-			}
-			case INS_LDA_ABSX:
-			{
-				// TODO: +1 cycle if page crossed?
-				abs_address = fetch_word(&clock, cpu, memory);
-				abs_address += cpu->x;
-
-				clock--;
-				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
-
-				lda_set_flags(cpu);
 
 				break;
 			}
@@ -144,14 +161,14 @@ BYTE read_byte(int *clock, BYTE address, MEMORY *memory)
 	return data;
 }
 
-void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory)
+void write_byte(int *clock, BYTE address, BYTE value, CPU *cpu, MEMORY *memory)
 {
 	/*
 	 * Writes a byte to memory
 	 * Uses 1 clock cycle
 	 * Increments the program counter
 	*/
-	memory->data[address] = cpu->a;
+	memory->data[address] = value;
 	cpu->pc++;
 	printf("Used 1 cycle for writing byte.\n");
 	*clock -= 1;

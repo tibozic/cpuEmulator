@@ -35,7 +35,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 			{
 				cpu->a = fetch_byte(&clock, cpu, memory);
 
-				lda_set_flags(cpu);
+				load_set_flags(cpu, cpu->a);
 
 				break;
 			}
@@ -45,7 +45,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 
 				cpu->a = read_byte(&clock, zp_address, memory);
 
-				lda_set_flags(cpu);
+				load_set_flags(cpu, cpu->a);
 
 				break;
 			}
@@ -57,7 +57,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 				clock--;
 
 				cpu->a = read_byte(&clock, zp_address, memory);
-				lda_set_flags(cpu);
+				load_set_flags(cpu, cpu->a);
 
 				break;
 			}

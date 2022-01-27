@@ -60,7 +60,7 @@ BYTE read_byte(int *clock, BYTE address, MEMORY *memory);
 void write_byte(int *clock, BYTE address, CPU *cpu, MEMORY *memory);
 WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory);
 void write_word(int *clock, WORD address, WORD value, MEMORY *memory);
-void lda_set_flags(CPU *cpu);
+void load_set_flags(CPU *cpu, BYTE register_data);
 void print_memory(MEMORY *memory, int start, int end);
 BYTE read_word(int *clock, WORD address, MEMORY *memory);
 

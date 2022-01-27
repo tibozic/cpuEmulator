@@ -4,7 +4,7 @@ CFLAGS=-std=c99 -Wall -Wextra
 libname=
 path=
 
-libraries=-lm
+libraries=cpu.c -lm
 # libpaths=-L/home/billy/Documents/Projects/c/xlib/ -L/home/billy/Documents/Projects/c/myfiles
 
 name=main

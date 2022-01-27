@@ -61,6 +61,28 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_LDA_ABS:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
+
+				load_set_flags(cpu, cpu->a);
+
+				break;
+			}
+			case INS_LDA_ABSX:
+			{
+				// TODO: +1 cycle if page crossed?
+				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address += cpu->x;
+
+				clock--;
+				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
+
+				load_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_STA_ZP:
 			{
 				zp_address = fetch_byte(&clock, cpu, memory);
@@ -73,7 +95,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 			}
 			case INS_LDX_IM:
 			{
-				cpu->a = fetch_byte(&clock, cpu, memory);
+				cpu->x = fetch_byte(&clock, cpu, memory);
 
 				load_set_flags(cpu, cpu->x);
 
@@ -83,7 +105,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 			{
 				zp_address = fetch_byte(&clock, cpu, memory);
 
-				cpu->a = read_byte(&clock, zp_address, memory);
+				cpu->x = read_byte(&clock, zp_address, memory);
 
 				load_set_flags(cpu, cpu->x);
 
@@ -96,7 +118,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 				zp_address += cpu->x;
 				clock--;
 
-				cpu->a = read_byte(&clock, zp_address, memory);
+				cpu->x = read_byte(&clock, zp_address, memory);
 				load_set_flags(cpu, cpu->x);
 
 				break;
@@ -104,7 +126,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 			case INS_LDX_ABS:
 			{
 				abs_address = fetch_word(&clock, cpu, memory);
-				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
+				cpu->x = (BYTE) read_word(&clock, abs_address, memory);
 
 				load_set_flags(cpu, cpu->x);
 

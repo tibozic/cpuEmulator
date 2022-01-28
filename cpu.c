@@ -164,10 +164,12 @@ BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
 	 * Uses 1 clock cycle
 	 * Increments the program counter
 	*/
+
 	BYTE data = memory->data[cpu->pc];
 	cpu->pc++;
 	printf("Used 1 clock cycle for fetching byte.\n");
 	*clock -= 1;
+
 	return data;
 }
 
@@ -177,9 +179,11 @@ BYTE read_byte(int *clock, BYTE address, MEMORY *memory)
 	 * Fetches a byte from memory
 	 * Uses 1 clock cylce
 	*/
+
 	BYTE data = memory->data[address];
 	printf("Used 1 clock cycle for reading byte.\n");
 	*clock -= - 1;
+
 	return data;
 }
 
@@ -190,6 +194,7 @@ void write_byte(int *clock, BYTE address, BYTE value, CPU *cpu, MEMORY *memory)
 	 * Uses 1 clock cycle
 	 * Increments the program counter
 	*/
+
 	memory->data[address] = value;
 	cpu->pc++;
 	printf("Used 1 cycle for writing byte.\n");
@@ -203,6 +208,7 @@ WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory)
 	 * Uses 2 clock cycles
 	 * Increments the program counter
 	*/
+
 	// Little endian
 	WORD data = memory->data[cpu->pc];
 	cpu->pc++;
@@ -222,6 +228,7 @@ BYTE read_word(int *clock, WORD address, MEMORY *memory)
 	 * Fetches a word from memory
 	 * Uses 2 clock cycles
 	*/
+
 	WORD data = memory->data[address];
 	*clock -= 1;
 
@@ -240,10 +247,12 @@ void write_word(int *clock, WORD address, WORD value, MEMORY *memory)
 	 * Writes a word to memory
 	 * Uses 2 clock cycles
 	*/
+
 	memory->data[address]		= (value & 0xFF);
 	*clock -= 1;
 	memory->data[address + 1]	= (value >> 8);
 	*clock -= 1;
+
 	printf("Used 2 clock cycles for writing a word.\n");
 }
 
@@ -252,6 +261,7 @@ void load_set_flags(CPU *cpu, BYTE register_data)
 	/*
 	 * Sets the appropriate flags when loading to a register
 	*/
+
 	cpu->z = (register_data == 0);
 	// Check if 7th bit of cpu->a is 1 (number is negative)
 	cpu->n = ((register_data & (1 << 6)) > 0);

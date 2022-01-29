@@ -6,6 +6,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #define STACK_OFFSET 0x0100
 
@@ -58,7 +59,7 @@ typedef struct
 // Functions
 void reset_cpu(CPU *cpu, MEMORY *memory);
 void initialise_memory(MEMORY *memory);
-void execute_instruction(int clock, CPU *cpu, MEMORY *memory);
+int execute_instruction(CPU *cpu, MEMORY *memory);
 BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory);
 BYTE read_byte(int *clock, BYTE address, MEMORY *memory);
 void write_byte(int *clock, BYTE address, BYTE value, CPU *cpu, MEMORY *memory);

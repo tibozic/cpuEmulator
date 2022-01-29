@@ -20,13 +20,16 @@ void initialise_memory(MEMORY *memory)
 	}
 }
 
-void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
+int execute_instruction(CPU *cpu, MEMORY *memory)
 {
 	BYTE instruction;
 	BYTE zp_address;
 	WORD abs_address;
 
-	while (clock > 0)
+	bool ended = false;
+	int clock = 0;
+
+	while (!ended)
 	{
 		instruction = fetch_byte(&clock, cpu, memory);
 		switch(instruction)
@@ -54,7 +57,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 				zp_address = fetch_byte(&clock, cpu, memory);
 
 				zp_address += cpu->x;
-				clock--;
+				clock++;
 
 				cpu->a = read_byte(&clock, zp_address, memory);
 				load_set_flags(cpu, cpu->a);
@@ -76,7 +79,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 				abs_address = fetch_word(&clock, cpu, memory);
 				abs_address += cpu->x;
 
-				clock--;
+				clock++;
 				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
 
 				load_set_flags(cpu, cpu->a);
@@ -116,7 +119,7 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 				zp_address = fetch_byte(&clock, cpu, memory);
 
 				zp_address += cpu->x;
-				clock--;
+				clock++;
 
 				cpu->x = read_byte(&clock, zp_address, memory);
 				load_set_flags(cpu, cpu->x);
@@ -141,20 +144,26 @@ void execute_instruction(int clock, CPU *cpu, MEMORY *memory)
 						   cpu->pc - 1,
 						   memory);
 				cpu->sp--;
-				clock--;
+				clock++;
 
 				cpu->pc = abs_address;
-				clock--;
+				clock++;
 
 				break;
 			}
 			default:
 			{
+				// We fetched an unnecessary instruction, so it doesn't
+				// actually count
 				printf("Instruction unknown: 0x%x\n", instruction);
+				clock--;
+				ended = true;
 				break;
 			}
 		}
 	}
+
+	return clock;
 }
 
 BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
@@ -167,8 +176,7 @@ BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
 
 	BYTE data = memory->data[cpu->pc];
 	cpu->pc++;
-	printf("Used 1 clock cycle for fetching byte.\n");
-	*clock -= 1;
+	(*clock)++;
 
 	return data;
 }
@@ -181,8 +189,7 @@ BYTE read_byte(int *clock, BYTE address, MEMORY *memory)
 	*/
 
 	BYTE data = memory->data[address];
-	printf("Used 1 clock cycle for reading byte.\n");
-	*clock -= - 1;
+	(*clock)++;
 
 	return data;
 }
@@ -197,8 +204,7 @@ void write_byte(int *clock, BYTE address, BYTE value, CPU *cpu, MEMORY *memory)
 
 	memory->data[address] = value;
 	cpu->pc++;
-	printf("Used 1 cycle for writing byte.\n");
-	*clock -= 1;
+	(*clock)++;
 }
 
 WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory)
@@ -212,13 +218,12 @@ WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory)
 	// Little endian
 	WORD data = memory->data[cpu->pc];
 	cpu->pc++;
-	*clock -= 1;
+	(*clock)++;
 
 	data |= (memory->data[cpu->pc] << 8);
 	cpu->pc++;
-	*clock -= 1;
+	(*clock)++;
 
-	printf("Used 2 clock cylces for fetching a word.\n");
 	return data;
 }
 
@@ -230,13 +235,12 @@ BYTE read_word(int *clock, WORD address, MEMORY *memory)
 	*/
 
 	WORD data = memory->data[address];
-	*clock -= 1;
+	(*clock)++;
 
 	data |= (memory->data[address + 1] << 8);
-	*clock -= 1;
+	(*clock)++;
 
-	printf("Used 2 clock cycle for reading word.\n");
-	*clock -= - 1;
+	(*clock)++;
 
 	return data;
 }
@@ -249,11 +253,10 @@ void write_word(int *clock, WORD address, WORD value, MEMORY *memory)
 	*/
 
 	memory->data[address]		= (value & 0xFF);
-	*clock -= 1;
+	(*clock)++;
 	memory->data[address + 1]	= (value >> 8);
-	*clock -= 1;
+	(*clock)++;
 
-	printf("Used 2 clock cycles for writing a word.\n");
 }
 
 void load_set_flags(CPU *cpu, BYTE register_data)

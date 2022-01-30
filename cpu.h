@@ -24,8 +24,6 @@ typedef struct
 typedef struct
 {
 	WORD pc;
-
-	// kk
 	BYTE sp;
 
 	// Registers

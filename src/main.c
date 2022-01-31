@@ -1,4 +1,4 @@
-#include "src/includes/mytests.h"
+#include "includes/mytests.h"
 #include "cpu.h"
 
 void test_lda_im(CPU cpu, MEMORY memory);

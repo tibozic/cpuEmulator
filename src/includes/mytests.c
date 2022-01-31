@@ -10,17 +10,21 @@ void expect_eq(const char *function_name, int line_number, int value1, int value
 	if (value1 == value2)
 	{
 		fprintf(fp,
-				"\t[ " ANSI_COLOR_GREEN " Passed " ANSI_COLOR_RESET " ] %s:%d\n",
+				"\t[ " ANSI_COLOR_GREEN " Passed " ANSI_COLOR_RESET " ] %s:%d EXPECT_EQ(%d, %d)\n",
 				function_name,
-				line_number);
+				line_number,
+				value1,
+				value2);
 	}
 	else
 	{
 		failed_current++;
 		fprintf(fp,
-				"\t[ " ANSI_COLOR_RED " Failed " ANSI_COLOR_RESET " ] %s:%d\n",
+				"\t[ " ANSI_COLOR_RED " Failed " ANSI_COLOR_RESET " ] %s:%d EXPECT_EQ(%d, %d)\n",
 				function_name,
-				line_number);
+				line_number,
+				value1,
+				value2);
 		fprintf(fp,
 				"\t\t\t\t Expected `%d` to match `%d`\n",
 				value1,
@@ -33,17 +37,21 @@ void expect_neq(const char *function_name, int line_number, int value1, int valu
 	if (value1 != value2)
 	{
 		fprintf(fp,
-				"\t[ " ANSI_COLOR_GREEN " Passed " ANSI_COLOR_RESET " ] %s:%d\n",
+				"\t[ " ANSI_COLOR_GREEN " Passed " ANSI_COLOR_RESET " ] %s:%d EXPECT_NEQ(%d, %d)\n",
 				function_name,
-				line_number);
+				line_number,
+				value1,
+				value2);
 	}
 	else
 	{
 		failed_current++;
 		fprintf(fp,
-				"\t[ " ANSI_COLOR_RED " Failed " ANSI_COLOR_RESET " ] %s:%d\n",
+				"\t[ " ANSI_COLOR_RED " Failed " ANSI_COLOR_RESET " ] %s:%d EXPECT_NEQ(%d, %d)\n",
 				function_name,
-				line_number);
+				line_number,
+				value1,
+				value2);
 		fprintf(fp,
 				"\t\t\t\t Expected `%d` not to match `%d`\n",
 				value1,
@@ -56,17 +64,19 @@ void expect_true(const char *function_name, int line_number, bool value)
 	if (value)
 	{
 		fprintf(fp,
-				"\t[ " ANSI_COLOR_GREEN " Passed " ANSI_COLOR_RESET " ] %s:%d\n",
+				"\t[ " ANSI_COLOR_GREEN " Passed " ANSI_COLOR_RESET " ] %s:%d EXPECT_TRUE(%d)\n",
 				function_name,
-				line_number);
+				line_number,
+				value);
 	}
 	else
 	{
 		failed_current++;
 		fprintf(fp,
-				"\t[ " ANSI_COLOR_RED " Failed " ANSI_COLOR_RESET " ] %s:%d\n",
+				"\t[ " ANSI_COLOR_RED " Failed " ANSI_COLOR_RESET " ] %s:%d EXPECT_TRUE(%d)\n",
 				function_name,
-				line_number);
+				line_number,
+				value);
 		fprintf(fp,
 				"\t\t\t\t Expected `TRUE (1)`, got `%d`\n", value);
 	}
@@ -77,17 +87,19 @@ void expect_false(const char *function_name, int line_number, bool value)
 	if (!value)
 	{
 		fprintf(fp,
-				"\t[ " ANSI_COLOR_GREEN " Passed " ANSI_COLOR_RESET " ] %s:%d\n",
+				"\t[ " ANSI_COLOR_GREEN " Passed " ANSI_COLOR_RESET " ] %s:%d EXPECT_FALSE(%d)\n",
 				function_name,
-				line_number);
+				line_number,
+				value);
 	}
 	else
 	{
 		failed_current++;
 		fprintf(fp,
-				"\t[ " ANSI_COLOR_RED " Failed " ANSI_COLOR_RESET " ] %s:%d\n",
+				"\t[ " ANSI_COLOR_RED " Failed " ANSI_COLOR_RESET " ] %s:%d EXPECT_FALSE(%d)\n",
 				function_name,
-				line_number);
+				line_number,
+				value);
 		fprintf(fp,
 				"\t\t\t\t Expected `FALSE (0)`, got `%d`\n", value);
 	}

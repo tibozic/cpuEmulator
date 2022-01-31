@@ -153,9 +153,9 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			}
 			default:
 			{
+				printf("Instruction unknown: 0x%x\n", instruction);
 				// We fetched an unnecessary instruction, so it doesn't
 				// actually count
-				printf("Instruction unknown: 0x%x\n", instruction);
 				clock--;
 				ended = true;
 				break;

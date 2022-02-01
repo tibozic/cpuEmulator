@@ -52,6 +52,7 @@ typedef struct
 #define INS_LDX_ZP 0xA6
 #define INS_LDX_ZPX 0xB6
 #define INS_LDX_ABS 0xAE
+#define INS_LDX_ABSY 0xBE
 #define INS_JSR 0x20
 
 // Functions

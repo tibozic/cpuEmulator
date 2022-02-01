@@ -77,7 +77,6 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			}
 			case INS_LDA_ABSX:
 			{
-				// TODO: +1 cycle if page crossed?
 				abs_address = fetch_word(&clock, cpu, memory);
 
 				abs_addressx = abs_address + cpu->x;
@@ -139,6 +138,25 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			{
 				abs_address = fetch_word(&clock, cpu, memory);
 				cpu->x = read_byte(&clock, abs_address, memory);
+
+				load_set_flags(cpu, cpu->x);
+
+				break;
+			}
+			case INS_LDX_ABSY:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+
+				abs_addressx = abs_address + cpu->y;
+				clock++;
+
+				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
+				if ( !crossed_page_boundry )
+				{
+					clock--;
+				}
+
+				cpu->x = read_byte(&clock, abs_addressx, memory);
 
 				load_set_flags(cpu, cpu->x);
 

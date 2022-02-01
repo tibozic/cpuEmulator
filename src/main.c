@@ -7,6 +7,7 @@ void test_lda_zpx(CPU cpu, MEMORY memory);
 void test_lda_abs(CPU cpu, MEMORY memory);
 void test_lda_absx(CPU cpu, MEMORY memory);
 void test_lda_indx(CPU cpu, MEMORY memory);
+void test_lda_indy(CPU cpu, MEMORY memory);
 void test_ldx_absy(CPU cpu, MEMORY memory);
 void test_lda_absy(CPU cpu, MEMORY memory);
 
@@ -22,8 +23,10 @@ int main(void)
 	test_lda_absx(cpu, memory);
 	test_lda_absy(cpu, memory);
 	test_lda_indx(cpu, memory);
+	test_lda_indy(cpu, memory);
 
 	test_ldx_absy(cpu, memory);
+
 	print_report();
 }
 
@@ -498,6 +501,83 @@ void test_lda_indx(CPU cpu, MEMORY memory)
 
 	END_TEST();
 
+}
+
+void test_lda_indy(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("LDA Indirect Y");
+
+	reset_cpu(&cpu, &memory);
+	cpu.y = 0x04;
+	memory.data[0xFFFC] = INS_LDA_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0x00;
+	memory.data[0x0003] = 0x80;
+	memory.data[0x8004] = 0x15;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x15);
+	EXPECT_EQ(number_of_instructions, 5);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+
+	START_TEST("LDA Indirect Y - negative");
+
+	reset_cpu(&cpu, &memory);
+	cpu.y = 0x04;
+	memory.data[0xFFFC] = INS_LDA_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0x00;
+	memory.data[0x0003] = 0x80;
+	memory.data[0x8004] = 0x42;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x42);
+	EXPECT_EQ(number_of_instructions, 5);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 1);
+
+	END_TEST();
+
+	START_TEST("LDA Indirect Y - zero");
+
+	reset_cpu(&cpu, &memory);
+	cpu.y = 0x04;
+	memory.data[0xFFFC] = INS_LDA_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0x00;
+	memory.data[0x0003] = 0x80;
+	memory.data[0x8004] = 0x00;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x00);
+	EXPECT_EQ(number_of_instructions, 5);
+	EXPECT_EQ(cpu.z, 1);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+
+	START_TEST("LDA Indirect Y - page crossed");
+
+	reset_cpu(&cpu, &memory);
+	cpu.y = 0x04;
+	memory.data[0xFFFC] = INS_LDA_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0xFF;
+	memory.data[0x0003] = 0x00;
+	memory.data[0x0103] = 0x15;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x15);
+	EXPECT_EQ(number_of_instructions, 6);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
 }
 
 void test_ldx_absy(CPU cpu, MEMORY memory)

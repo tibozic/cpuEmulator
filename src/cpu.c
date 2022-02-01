@@ -127,6 +127,25 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_LDA_INDY:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				abs_address = read_word(&clock, zp_address, memory);
+				abs_addressx = abs_address + cpu->y;
+
+				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
+				if ( !crossed_page_boundry )
+				{
+					clock--;
+				}
+
+				cpu->a = read_byte(&clock, abs_addressx, memory);
+
+				load_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_STA_ZP:
 			{
 				zp_address = fetch_byte(&clock, cpu, memory);

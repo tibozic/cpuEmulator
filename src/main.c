@@ -13,6 +13,7 @@ int main(void)
 	test_lda_im(cpu, memory);
 	test_lda_zp(cpu, memory);
 	test_lda_zpx(cpu, memory);
+	test_lda_abs(cpu, memory);
 	print_report();
 }
 
@@ -160,6 +161,59 @@ void test_lda_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.n, 0);
 
 	END_TEST();
+}
 
+void test_lda_abs(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("LDA Absolute");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDA_ABS;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1242] = 0x15;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x15);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+
+	START_TEST("LDA Absolute - negative");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDA_ABS;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1242] = 0x42;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x42);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 1);
+
+	END_TEST();
+
+	START_TEST("LDA Absolute - zero");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDA_ABS;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1242] = 0x0;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x0);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 1);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+}
 
 }

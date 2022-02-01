@@ -94,6 +94,25 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_LDA_ABSY:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+
+				abs_addressx = abs_address + cpu->y;
+				clock++;
+
+				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
+				if ( !crossed_page_boundry )
+				{
+					clock--;
+				}
+
+				cpu->a = read_byte(&clock, abs_addressx, memory);
+
+				load_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_STA_ZP:
 			{
 				zp_address = fetch_byte(&clock, cpu, memory);

@@ -47,6 +47,7 @@ typedef struct
 #define INS_LDA_ZPX 0xB5
 #define INS_LDA_ABS 0xAD
 #define INS_LDA_ABSX 0xBD
+#define INS_LDA_ABSY 0xB9
 #define INS_STA_ZP 0x85
 #define INS_LDX_IM 0xA2
 #define INS_LDX_ZP 0xA6

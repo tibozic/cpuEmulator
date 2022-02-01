@@ -177,7 +177,7 @@ void end_test(const char *function_name)
 
 void print_report()
 {
-	fprintf(stdout, "**** Status report *****\n");
+	fprintf(stdout, "\n**** Status report *****\n");
 	fprintf(stdout,
 			"Ran %d tests, " ANSI_COLOR_GREEN " %d passed" ANSI_COLOR_RESET ", " ANSI_COLOR_RED " %d failed\n" ANSI_COLOR_RESET,
 			tests_total,

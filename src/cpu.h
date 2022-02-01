@@ -48,6 +48,8 @@ typedef struct
 #define INS_LDA_ABS 0xAD
 #define INS_LDA_ABSX 0xBD
 #define INS_LDA_ABSY 0xB9
+#define INS_LDA_INDX 0xA1
+#define INS_LDA_INDY 0xB1
 #define INS_STA_ZP 0x85
 #define INS_LDX_IM 0xA2
 #define INS_LDX_ZP 0xA6
@@ -64,9 +66,9 @@ BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory);
 BYTE read_byte(int *clock, WORD address, MEMORY *memory);
 void write_byte(int *clock, BYTE address, BYTE value, CPU *cpu, MEMORY *memory);
 WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory);
+WORD read_word(int *clock, WORD address, MEMORY *memory);
 void write_word(int *clock, WORD address, WORD value, MEMORY *memory);
 void load_set_flags(CPU *cpu, BYTE register_data);
 void print_memory(MEMORY *memory, int start, int end);
-BYTE read_word(int *clock, WORD address, MEMORY *memory);
 
 #endif // CPU_H_

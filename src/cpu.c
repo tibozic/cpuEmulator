@@ -24,6 +24,7 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 {
 	BYTE instruction;
 	BYTE zp_address;
+	BYTE zp_addressx;
 	WORD abs_address;
 	WORD abs_addressx;
 	bool crossed_page_boundry;
@@ -108,6 +109,19 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 				}
 
 				cpu->a = read_byte(&clock, abs_addressx, memory);
+
+				load_set_flags(cpu, cpu->a);
+
+				break;
+			}
+			case INS_LDA_INDX:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_addressx = zp_address + cpu->x;
+
+				abs_address = read_word(&clock, zp_addressx, memory);
+
+				cpu->a = read_byte(&clock, abs_address, memory);
 
 				load_set_flags(cpu, cpu->a);
 
@@ -273,7 +287,7 @@ WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory)
 	return data;
 }
 
-BYTE read_word(int *clock, WORD address, MEMORY *memory)
+WORD read_word(int *clock, WORD address, MEMORY *memory)
 {
 	/*
 	 * Fetches a word from memory

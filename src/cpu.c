@@ -25,6 +25,8 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 	BYTE instruction;
 	BYTE zp_address;
 	WORD abs_address;
+	WORD abs_addressx;
+	bool crossed_page_boundry;
 
 	bool ended = false;
 	int clock = 0;
@@ -77,10 +79,17 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			{
 				// TODO: +1 cycle if page crossed?
 				abs_address = fetch_word(&clock, cpu, memory);
-				abs_address += cpu->x;
 
+				abs_addressx = abs_address + cpu->x;
 				clock++;
-				cpu->a = read_byte(&clock, abs_address, memory);
+
+				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
+				if ( !crossed_page_boundry )
+				{
+					clock--;
+				}
+
+				cpu->a = read_byte(&clock, abs_addressx, memory);
 
 				load_set_flags(cpu, cpu->a);
 

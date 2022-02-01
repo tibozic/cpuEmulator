@@ -67,7 +67,7 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			case INS_LDA_ABS:
 			{
 				abs_address = fetch_word(&clock, cpu, memory);
-				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
+				cpu->a = read_byte(&clock, abs_address, memory);
 
 				load_set_flags(cpu, cpu->a);
 
@@ -80,7 +80,7 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 				abs_address += cpu->x;
 
 				clock++;
-				cpu->a = (BYTE) read_word(&clock, abs_address, memory);
+				cpu->a = read_byte(&clock, abs_address, memory);
 
 				load_set_flags(cpu, cpu->a);
 
@@ -129,7 +129,7 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			case INS_LDX_ABS:
 			{
 				abs_address = fetch_word(&clock, cpu, memory);
-				cpu->x = (BYTE) read_word(&clock, abs_address, memory);
+				cpu->x = read_byte(&clock, abs_address, memory);
 
 				load_set_flags(cpu, cpu->x);
 
@@ -181,7 +181,7 @@ BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
 	return data;
 }
 
-BYTE read_byte(int *clock, BYTE address, MEMORY *memory)
+BYTE read_byte(int *clock, WORD address, MEMORY *memory)
 {
 	/*
 	 * Fetches a byte from memory

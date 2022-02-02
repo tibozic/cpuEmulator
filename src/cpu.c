@@ -117,7 +117,9 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			case INS_LDA_INDX:
 			{
 				zp_address = fetch_byte(&clock, cpu, memory);
+
 				zp_addressx = zp_address + cpu->x;
+				clock++;
 
 				abs_address = read_word(&clock, zp_addressx, memory);
 
@@ -132,7 +134,9 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 				zp_address = fetch_byte(&clock, cpu, memory);
 
 				abs_address = read_word(&clock, zp_address, memory);
+
 				abs_addressx = abs_address + cpu->y;
+				clock++;
 
 				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
 				if ( !crossed_page_boundry )
@@ -375,8 +379,6 @@ WORD read_word(int *clock, WORD address, MEMORY *memory)
 	(*clock)++;
 
 	data |= (memory->data[address + 1] << 8);
-	(*clock)++;
-
 	(*clock)++;
 
 	return data;

@@ -8,8 +8,13 @@ void test_lda_abs(CPU cpu, MEMORY memory);
 void test_lda_absx(CPU cpu, MEMORY memory);
 void test_lda_indx(CPU cpu, MEMORY memory);
 void test_lda_indy(CPU cpu, MEMORY memory);
-void test_ldx_absy(CPU cpu, MEMORY memory);
 void test_lda_absy(CPU cpu, MEMORY memory);
+
+void test_ldx_im(CPU cpu, MEMORY memory);
+void test_ldx_zp(CPU cpu, MEMORY memory);
+void test_ldx_zpy(CPU cpu, MEMORY memory);
+void test_ldx_abs(CPU cpu, MEMORY memory);
+void test_ldx_absy(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -25,6 +30,10 @@ int main(void)
 	test_lda_indx(cpu, memory);
 	test_lda_indy(cpu, memory);
 
+	test_ldx_im(cpu, memory);
+	test_ldx_zp(cpu, memory);
+	test_ldx_zpy(cpu, memory);
+	test_ldx_abs(cpu, memory);
 	test_ldx_absy(cpu, memory);
 
 	print_report();
@@ -580,6 +589,205 @@ void test_lda_indy(CPU cpu, MEMORY memory)
 	END_TEST();
 }
 
+void test_ldx_im(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("LDX Immediate");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_IM;
+	memory.data[0xFFFD] = 0x12;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x12);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 0);
+	END_TEST();
+
+	START_TEST("LDX Immediate - negative");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_IM;
+	memory.data[0xFFFD] = 0x42;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x42);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 1);
+	END_TEST();
+
+	START_TEST("LDX Immediate - zero");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_IM;
+	memory.data[0xFFFD] = 0x0;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x0);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_EQ(cpu.z, 1);
+	EXPECT_EQ(cpu.n, 0);
+	END_TEST();
+}
+
+void test_ldx_zp(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+	START_TEST("LDX Zero page");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_ZP;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x42]	= 0x12;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x12);
+	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+
+	START_TEST("LDX Zero page - negative");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_ZP;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x42]	= 0x42;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x42);
+	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 1);
+
+	END_TEST();
+
+	START_TEST("LDX Zero page - zero");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_ZP;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x42]	= 0x0;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x0);
+	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(cpu.z, 1);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+}
+
+void test_ldx_zpy(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("LDX  Zero page Y");
+
+	reset_cpu(&cpu, &memory);
+	cpu.y = 0x7;
+	memory.data[0xFFFC] = INS_LDX_ZPY;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x49] = 0x13;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x13);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+
+	START_TEST("LDX  Zero page Y - negative");
+
+	reset_cpu(&cpu, &memory);
+	cpu.y = 0x7;
+	memory.data[0xFFFC] = INS_LDX_ZPY;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x49] = 0x42;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x42);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 1);
+
+	END_TEST();
+
+	START_TEST("LDX  Zero page Y - zero");
+
+	reset_cpu(&cpu, &memory);
+	cpu.y = 0x7;
+	memory.data[0xFFFC] = INS_LDX_ZPY;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x49] = 0x0;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x0);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 1);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+}
+
+void test_ldx_abs(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("LDX Absolute");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_ABS;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1242] = 0x15;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x15);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+
+	START_TEST("LDX Absolute - negative");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_ABS;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1242] = 0x42;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x42);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 0);
+	EXPECT_EQ(cpu.n, 1);
+
+	END_TEST();
+
+	START_TEST("LDX Absolute - zero");
+
+	reset_cpu(&cpu, &memory);
+	memory.data[0xFFFC] = INS_LDX_ABS;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1242] = 0x0;
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, 0x0);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.z, 1);
+	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+}
+
 void test_ldx_absy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
@@ -638,14 +846,14 @@ void test_ldx_absy(CPU cpu, MEMORY memory)
 	START_TEST("LDX Absolute Y page crossed");
 
 	reset_cpu(&cpu, &memory);
-	cpu.x = 0xF;
-	memory.data[0xFFFC] = INS_LDA_ABSX;
+	cpu.y = 0xF;
+	memory.data[0xFFFC] = INS_LDX_ABSY;
 	memory.data[0xFFFD] = 0xFF;
 	memory.data[0xFFFE] = 0x0;
 	memory.data[0x010E] = 0x15;
 	number_of_instructions = execute_instruction(&cpu, &memory);
 
-	EXPECT_EQ(cpu.a, 0x15);
+	EXPECT_EQ(cpu.x, 0x15);
 	EXPECT_EQ(number_of_instructions, 5);
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);

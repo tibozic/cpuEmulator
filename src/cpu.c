@@ -174,11 +174,11 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
-			case INS_LDX_ZPX:
+			case INS_LDX_ZPY:
 			{
 				zp_address = fetch_byte(&clock, cpu, memory);
 
-				zp_address += cpu->x;
+				zp_address += cpu->y;
 				clock++;
 
 				cpu->x = read_byte(&clock, zp_address, memory);

@@ -146,16 +146,6 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
-			case INS_STA_ZP:
-			{
-				zp_address = fetch_byte(&clock, cpu, memory);
-
-				memory->data[zp_address] = cpu->a;
-
-				write_byte(&clock, zp_address, cpu->a, cpu, memory);
-
-				break;
-			}
 			case INS_LDX_IM:
 			{
 				cpu->x = fetch_byte(&clock, cpu, memory);
@@ -269,6 +259,16 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 				cpu->y = read_byte(&clock, abs_addressx, memory);
 
 				load_set_flags(cpu, cpu->y);
+
+				break;
+			}
+			case INS_STA_ZP:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				memory->data[zp_address] = cpu->a;
+
+				write_byte(&clock, zp_address, cpu->a, cpu, memory);
 
 				break;
 			}

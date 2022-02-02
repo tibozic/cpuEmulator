@@ -270,9 +270,74 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			{
 				zp_address = fetch_byte(&clock, cpu, memory);
 
-				memory->data[zp_address] = cpu->a;
-
 				write_byte(&clock, zp_address, cpu->a, cpu, memory);
+
+				break;
+			}
+			case INS_STA_ZPX:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				zp_addressx = zp_address + cpu->x;
+				clock++;
+
+				write_byte(&clock, zp_addressx, cpu->a, cpu, memory);
+
+				break;
+			}
+			case INS_STA_ABS:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+
+				write_byte(&clock, abs_address, cpu->a, cpu, memory);
+
+				break;
+			}
+			case INS_STA_ABSX:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+
+				abs_addressx = abs_address + cpu->x;
+				clock++;
+
+				write_byte(&clock, abs_addressx, cpu->a, cpu, memory);
+
+				break;
+			}
+			case INS_STA_ABSY:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+
+				abs_addressx = abs_address + cpu->y;
+				clock++;
+
+				write_byte(&clock, abs_addressx, cpu->a, cpu, memory);
+
+				break;
+			}
+			case INS_STA_INDX:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				zp_addressx = zp_address + cpu->x;
+				clock++;
+
+				abs_address = read_word(&clock, zp_addressx, memory);
+
+				write_byte(&clock, abs_address, cpu->a, cpu, memory);
+
+				break;
+			}
+			case INS_STA_INDY:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				abs_address = read_word(&clock, zp_address, memory);
+
+				abs_addressx = abs_address + cpu->y;
+				clock++;
+
+				write_byte(&clock, abs_addressx, cpu->a, cpu, memory);
 
 				break;
 			}
@@ -294,7 +359,7 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 			}
 			default:
 			{
-				printf("Instruction unknown: 0x%x\n", instruction);
+				// printf("Instruction unknown: 0x%x\n", instruction);
 				// We fetched an unnecessary instruction, so it doesn't
 				// actually count
 				clock--;
@@ -335,7 +400,7 @@ BYTE read_byte(int *clock, WORD address, MEMORY *memory)
 	return data;
 }
 
-void write_byte(int *clock, BYTE address, BYTE value, CPU *cpu, MEMORY *memory)
+void write_byte(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory)
 {
 	/*
 	 * Writes a byte to memory

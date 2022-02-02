@@ -48,10 +48,10 @@ typedef struct
 #define INS_LDA_ABS 0xAD
 #define INS_LDA_ABSX 0xBD
 #define INS_LDA_ABSY 0xB9
+// Indexed-indirect
 #define INS_LDA_INDX 0xA1
+// Indirect-indexed
 #define INS_LDA_INDY 0xB1
-
-#define INS_STA_ZP 0x85
 
 #define INS_LDX_IM 0xA2
 #define INS_LDX_ZP 0xA6
@@ -66,6 +66,14 @@ typedef struct
 #define INS_LDY_ABS 0xAC
 #define INS_LDY_ABSX 0xBC
 
+#define INS_STA_ZP 0x85
+#define INS_STA_ZPX 0x95
+#define INS_STA_ABS 0x8D
+#define INS_STA_ABSX 0x9D
+#define INS_STA_ABSY 0x99
+#define INS_STA_INDX 0x81
+#define INS_STA_INDY 0x91
+
 #define INS_JSR 0x20
 
 // Functions
@@ -74,7 +82,7 @@ void initialise_memory(MEMORY *memory);
 int execute_instruction(CPU *cpu, MEMORY *memory);
 BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory);
 BYTE read_byte(int *clock, WORD address, MEMORY *memory);
-void write_byte(int *clock, BYTE address, BYTE value, CPU *cpu, MEMORY *memory);
+void write_byte(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory);
 WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory);
 WORD read_word(int *clock, WORD address, MEMORY *memory);
 void write_word(int *clock, WORD address, WORD value, MEMORY *memory);

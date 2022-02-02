@@ -214,6 +214,64 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_LDY_IM:
+			{
+				cpu->y = fetch_byte(&clock, cpu, memory);
+
+				load_set_flags(cpu, cpu->y);
+
+				break;
+			}
+			case INS_LDY_ZP:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				cpu->y = read_byte(&clock, zp_address, memory);
+
+				load_set_flags(cpu, cpu->y);
+
+				break;
+			}
+			case INS_LDY_ZPX:
+			{
+				zp_address = fetch_byte(&clock, cpu, memory);
+
+				zp_address += cpu->x;
+				clock++;
+
+				cpu->y = read_byte(&clock, zp_address, memory);
+				load_set_flags(cpu, cpu->y);
+
+				break;
+			}
+			case INS_LDY_ABS:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+				cpu->y = read_byte(&clock, abs_address, memory);
+
+				load_set_flags(cpu, cpu->y);
+
+				break;
+			}
+			case INS_LDY_ABSX:
+			{
+				abs_address = fetch_word(&clock, cpu, memory);
+
+				abs_addressx = abs_address + cpu->x;
+				clock++;
+
+				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
+				if ( !crossed_page_boundry )
+				{
+					clock--;
+				}
+
+				cpu->y = read_byte(&clock, abs_addressx, memory);
+
+				load_set_flags(cpu, cpu->y);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = fetch_word(&clock, cpu, memory);

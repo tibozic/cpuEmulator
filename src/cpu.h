@@ -50,13 +50,22 @@ typedef struct
 #define INS_LDA_ABSY 0xB9
 #define INS_LDA_INDX 0xA1
 #define INS_LDA_INDY 0xB1
+
 #define INS_STA_ZP 0x85
+
 #define INS_LDX_IM 0xA2
 #define INS_LDX_ZP 0xA6
 #define INS_LDX_ZPY 0xB6
 #define INS_LDX_IM 0xA2
 #define INS_LDX_ABS 0xAE
 #define INS_LDX_ABSY 0xBE
+
+#define INS_LDY_IM 0xA0
+#define INS_LDY_ZP 0xA4
+#define INS_LDY_ZPX 0xB4
+#define INS_LDY_ABS 0xAC
+#define INS_LDY_ABSX 0xBC
+
 #define INS_JSR 0x20
 
 // Functions

@@ -22,6 +22,14 @@ void test_ldy_zpx(CPU cpu, MEMORY memory);
 void test_ldy_abs(CPU cpu, MEMORY memory);
 void test_ldy_absx(CPU cpu, MEMORY memory);
 
+void test_sta_zp(CPU cpu, MEMORY memory);
+void test_sta_zpx(CPU cpu, MEMORY memory);
+void test_sta_abs(CPU cpu, MEMORY memory);
+void test_sta_absx(CPU cpu, MEMORY memory);
+void test_sta_absy(CPU cpu, MEMORY memory);
+void test_sta_indx(CPU cpu, MEMORY memory);
+void test_sta_indy(CPU cpu, MEMORY memory);
+
 int main(void)
 {
 	CPU cpu;
@@ -47,6 +55,14 @@ int main(void)
 	test_ldy_zpx(cpu, memory);
 	test_ldy_abs(cpu, memory);
 	test_ldy_absx(cpu, memory);
+
+	test_sta_zp(cpu, memory);
+	test_sta_zpx(cpu, memory);
+	test_sta_abs(cpu, memory);
+	test_sta_absx(cpu, memory);
+	test_sta_absy(cpu, memory);
+	test_sta_indx(cpu, memory);
+	test_sta_indy(cpu, memory);
 
 	print_report();
 }
@@ -1209,6 +1225,170 @@ void test_ldy_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 5);
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
+
+	END_TEST();
+}
+
+void test_sta_zp(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STA zero page");
+
+	reset_cpu(&cpu, &memory);
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_STA_ZP;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[0x0033]);
+	EXPECT_EQ(number_of_instructions, 3);
+
+	END_TEST();
+}
+
+void test_sta_zpx(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STA zero page X");
+
+	reset_cpu(&cpu, &memory);
+	cpu.a = 0x12;
+	cpu.x = 0x13;
+	memory.data[0xFFFC] = INS_STA_ZPX;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[0x33 + 0x13]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+
+	START_TEST("STA zero page X - page crossed");
+
+	reset_cpu(&cpu, &memory);
+	cpu.a = 0x12;
+	cpu.x = 0xFF;
+	memory.data[0xFFFC] = INS_STA_ZPX;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[0x32]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+}
+
+void test_sta_abs(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STA absolute");
+
+	reset_cpu(&cpu, &memory);
+
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_STA_ABS;
+	memory.data[0xFFFD] = 0x34;
+	memory.data[0xFFFE] = 0x12;
+
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[0x1234]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+
+}
+
+void test_sta_absx(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STA absolute X");
+
+	reset_cpu(&cpu, &memory);
+
+	cpu.x = 0x03;
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_STA_ABSX;
+	memory.data[0xFFFD] = 0x34;
+	memory.data[0xFFFE] = 0x12;
+
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[0x1234 + cpu.x]);
+	EXPECT_EQ(number_of_instructions, 5);
+
+	END_TEST();
+}
+
+void test_sta_absy(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STA absolute Y");
+
+	reset_cpu(&cpu, &memory);
+
+	cpu.y = 0x03;
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_STA_ABSY;
+	memory.data[0xFFFD] = 0x34;
+	memory.data[0xFFFE] = 0x12;
+
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[0x1234 + cpu.y]);
+	EXPECT_EQ(number_of_instructions, 5);
+
+	END_TEST();
+}
+
+void test_sta_indx(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STA Indirect X");
+
+	reset_cpu(&cpu, &memory);
+	cpu.a = 0x12;
+	cpu.x = 0x04;
+	memory.data[0xFFFC] = INS_STA_INDX;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0006] = 0x00;
+	memory.data[0x0007] = 0x80;
+
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[0x8000]);
+	EXPECT_EQ(number_of_instructions, 6);
+
+	END_TEST();
+}
+
+void test_sta_indy(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STA Indirect X");
+
+	reset_cpu(&cpu, &memory);
+	cpu.a = 0x12;
+	cpu.y = 0x04;
+	memory.data[0xFFFC] = INS_STA_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0x00;
+	memory.data[0x0003] = 0x80;
+
+	number_of_instructions = execute_instruction(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[0x8000 + cpu.y]);
+	EXPECT_EQ(number_of_instructions, 6);
 
 	END_TEST();
 }

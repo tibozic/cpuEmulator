@@ -1,6 +1,6 @@
 #include "cpu.h"
 
-void reset_cpu(CPU *cpu, MEMORY *memory)
+void cpu_reset(CPU *cpu, MEMORY *memory)
 {
 	cpu->pc = 0xFFFC;
 
@@ -9,10 +9,10 @@ void reset_cpu(CPU *cpu, MEMORY *memory)
 
 	cpu->d = 0;
 
-	initialise_memory(memory);
+	memory_initialise(memory);
 }
 
-void initialise_memory(MEMORY *memory)
+void memory_initialise(MEMORY *memory)
 {
 	for (unsigned int i = 0; i < MEMORY_SIZE; ++i)
 	{
@@ -20,7 +20,7 @@ void initialise_memory(MEMORY *memory)
 	}
 }
 
-int execute_instruction(CPU *cpu, MEMORY *memory)
+int instruction_execute(CPU *cpu, MEMORY *memory)
 {
 	BYTE instruction;
 	BYTE zp_address;
@@ -34,51 +34,51 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 
 	while (!ended)
 	{
-		instruction = fetch_byte(&clock, cpu, memory);
+		instruction = byte_fetch(&clock, cpu, memory);
 		switch(instruction)
 		{
 			case INS_LDA_IM:
 			{
-				cpu->a = fetch_byte(&clock, cpu, memory);
+				cpu->a = byte_fetch(&clock, cpu, memory);
 
-				load_set_flags(cpu, cpu->a);
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}
 			case INS_LDA_ZP:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
-				cpu->a = read_byte(&clock, zp_address, memory);
+				cpu->a = byte_read(&clock, zp_address, memory);
 
-				load_set_flags(cpu, cpu->a);
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}
 			case INS_LDA_ZPX:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
 				zp_address += cpu->x;
 				clock++;
 
-				cpu->a = read_byte(&clock, zp_address, memory);
-				load_set_flags(cpu, cpu->a);
+				cpu->a = byte_read(&clock, zp_address, memory);
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}
 			case INS_LDA_ABS:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
-				cpu->a = read_byte(&clock, abs_address, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
+				cpu->a = byte_read(&clock, abs_address, memory);
 
-				load_set_flags(cpu, cpu->a);
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}
 			case INS_LDA_ABSX:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
 
 				abs_addressx = abs_address + cpu->x;
 				clock++;
@@ -89,15 +89,15 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 					clock--;
 				}
 
-				cpu->a = read_byte(&clock, abs_addressx, memory);
+				cpu->a = byte_read(&clock, abs_addressx, memory);
 
-				load_set_flags(cpu, cpu->a);
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}
 			case INS_LDA_ABSY:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
 
 				abs_addressx = abs_address + cpu->y;
 				clock++;
@@ -108,32 +108,32 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 					clock--;
 				}
 
-				cpu->a = read_byte(&clock, abs_addressx, memory);
+				cpu->a = byte_read(&clock, abs_addressx, memory);
 
-				load_set_flags(cpu, cpu->a);
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}
 			case INS_LDA_INDX:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
 				zp_addressx = zp_address + cpu->x;
 				clock++;
 
-				abs_address = read_word(&clock, zp_addressx, memory);
+				abs_address = word_read(&clock, zp_addressx, memory);
 
-				cpu->a = read_byte(&clock, abs_address, memory);
+				cpu->a = byte_read(&clock, abs_address, memory);
 
-				load_set_flags(cpu, cpu->a);
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}
 			case INS_LDA_INDY:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
-				abs_address = read_word(&clock, zp_address, memory);
+				abs_address = word_read(&clock, zp_address, memory);
 
 				abs_addressx = abs_address + cpu->y;
 				clock++;
@@ -144,54 +144,54 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 					clock--;
 				}
 
-				cpu->a = read_byte(&clock, abs_addressx, memory);
+				cpu->a = byte_read(&clock, abs_addressx, memory);
 
-				load_set_flags(cpu, cpu->a);
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}
 			case INS_LDX_IM:
 			{
-				cpu->x = fetch_byte(&clock, cpu, memory);
+				cpu->x = byte_fetch(&clock, cpu, memory);
 
-				load_set_flags(cpu, cpu->x);
+				cpu_ld_set_flags(cpu, cpu->x);
 
 				break;
 			}
 			case INS_LDX_ZP:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
-				cpu->x = read_byte(&clock, zp_address, memory);
+				cpu->x = byte_read(&clock, zp_address, memory);
 
-				load_set_flags(cpu, cpu->x);
+				cpu_ld_set_flags(cpu, cpu->x);
 
 				break;
 			}
 			case INS_LDX_ZPY:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
 				zp_address += cpu->y;
 				clock++;
 
-				cpu->x = read_byte(&clock, zp_address, memory);
-				load_set_flags(cpu, cpu->x);
+				cpu->x = byte_read(&clock, zp_address, memory);
+				cpu_ld_set_flags(cpu, cpu->x);
 
 				break;
 			}
 			case INS_LDX_ABS:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
-				cpu->x = read_byte(&clock, abs_address, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
+				cpu->x = byte_read(&clock, abs_address, memory);
 
-				load_set_flags(cpu, cpu->x);
+				cpu_ld_set_flags(cpu, cpu->x);
 
 				break;
 			}
 			case INS_LDX_ABSY:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
 
 				abs_addressx = abs_address + cpu->y;
 				clock++;
@@ -202,54 +202,54 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 					clock--;
 				}
 
-				cpu->x = read_byte(&clock, abs_addressx, memory);
+				cpu->x = byte_read(&clock, abs_addressx, memory);
 
-				load_set_flags(cpu, cpu->x);
+				cpu_ld_set_flags(cpu, cpu->x);
 
 				break;
 			}
 			case INS_LDY_IM:
 			{
-				cpu->y = fetch_byte(&clock, cpu, memory);
+				cpu->y = byte_fetch(&clock, cpu, memory);
 
-				load_set_flags(cpu, cpu->y);
+				cpu_ld_set_flags(cpu, cpu->y);
 
 				break;
 			}
 			case INS_LDY_ZP:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
-				cpu->y = read_byte(&clock, zp_address, memory);
+				cpu->y = byte_read(&clock, zp_address, memory);
 
-				load_set_flags(cpu, cpu->y);
+				cpu_ld_set_flags(cpu, cpu->y);
 
 				break;
 			}
 			case INS_LDY_ZPX:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
 				zp_address += cpu->x;
 				clock++;
 
-				cpu->y = read_byte(&clock, zp_address, memory);
-				load_set_flags(cpu, cpu->y);
+				cpu->y = byte_read(&clock, zp_address, memory);
+				cpu_ld_set_flags(cpu, cpu->y);
 
 				break;
 			}
 			case INS_LDY_ABS:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
-				cpu->y = read_byte(&clock, abs_address, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
+				cpu->y = byte_read(&clock, abs_address, memory);
 
-				load_set_flags(cpu, cpu->y);
+				cpu_ld_set_flags(cpu, cpu->y);
 
 				break;
 			}
 			case INS_LDY_ABSX:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
 
 				abs_addressx = abs_address + cpu->x;
 				clock++;
@@ -260,92 +260,92 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 					clock--;
 				}
 
-				cpu->y = read_byte(&clock, abs_addressx, memory);
+				cpu->y = byte_read(&clock, abs_addressx, memory);
 
-				load_set_flags(cpu, cpu->y);
+				cpu_ld_set_flags(cpu, cpu->y);
 
 				break;
 			}
 			case INS_STA_ZP:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
-				write_byte(&clock, zp_address, cpu->a, cpu, memory);
+				byte_write(&clock, zp_address, cpu->a, cpu, memory);
 
 				break;
 			}
 			case INS_STA_ZPX:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
 				zp_addressx = zp_address + cpu->x;
 				clock++;
 
-				write_byte(&clock, zp_addressx, cpu->a, cpu, memory);
+				byte_write(&clock, zp_addressx, cpu->a, cpu, memory);
 
 				break;
 			}
 			case INS_STA_ABS:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
 
-				write_byte(&clock, abs_address, cpu->a, cpu, memory);
+				byte_write(&clock, abs_address, cpu->a, cpu, memory);
 
 				break;
 			}
 			case INS_STA_ABSX:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
 
 				abs_addressx = abs_address + cpu->x;
 				clock++;
 
-				write_byte(&clock, abs_addressx, cpu->a, cpu, memory);
+				byte_write(&clock, abs_addressx, cpu->a, cpu, memory);
 
 				break;
 			}
 			case INS_STA_ABSY:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
 
 				abs_addressx = abs_address + cpu->y;
 				clock++;
 
-				write_byte(&clock, abs_addressx, cpu->a, cpu, memory);
+				byte_write(&clock, abs_addressx, cpu->a, cpu, memory);
 
 				break;
 			}
 			case INS_STA_INDX:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
 				zp_addressx = zp_address + cpu->x;
 				clock++;
 
-				abs_address = read_word(&clock, zp_addressx, memory);
+				abs_address = word_read(&clock, zp_addressx, memory);
 
-				write_byte(&clock, abs_address, cpu->a, cpu, memory);
+				byte_write(&clock, abs_address, cpu->a, cpu, memory);
 
 				break;
 			}
 			case INS_STA_INDY:
 			{
-				zp_address = fetch_byte(&clock, cpu, memory);
+				zp_address = byte_fetch(&clock, cpu, memory);
 
-				abs_address = read_word(&clock, zp_address, memory);
+				abs_address = word_read(&clock, zp_address, memory);
 
 				abs_addressx = abs_address + cpu->y;
 				clock++;
 
-				write_byte(&clock, abs_addressx, cpu->a, cpu, memory);
+				byte_write(&clock, abs_addressx, cpu->a, cpu, memory);
 
 				break;
 			}
 			case INS_JSR:
 			{
-				abs_address = fetch_word(&clock, cpu, memory);
+				abs_address = word_fetch(&clock, cpu, memory);
 
-				write_word(&clock,
+				word_write(&clock,
 						   STACK_OFFSET + cpu->sp,
 						   cpu->pc - 1,
 						   memory);
@@ -372,7 +372,7 @@ int execute_instruction(CPU *cpu, MEMORY *memory)
 	return clock;
 }
 
-BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
+BYTE byte_fetch(int *clock, CPU *cpu, MEMORY *memory)
 {
 	/*
 	 * Fetches a byte from memory
@@ -387,7 +387,7 @@ BYTE fetch_byte(int *clock, CPU *cpu, MEMORY *memory)
 	return data;
 }
 
-BYTE read_byte(int *clock, WORD address, MEMORY *memory)
+BYTE byte_read(int *clock, WORD address, MEMORY *memory)
 {
 	/*
 	 * Fetches a byte from memory
@@ -400,7 +400,7 @@ BYTE read_byte(int *clock, WORD address, MEMORY *memory)
 	return data;
 }
 
-void write_byte(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory)
+void byte_write(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory)
 {
 	/*
 	 * Writes a byte to memory
@@ -413,7 +413,7 @@ void write_byte(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory)
 	(*clock)++;
 }
 
-WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory)
+WORD word_fetch(int *clock, CPU *cpu, MEMORY *memory)
 {
 	/*
 	 * Fetches a word from memory
@@ -433,7 +433,7 @@ WORD fetch_word(int *clock, CPU *cpu, MEMORY *memory)
 	return data;
 }
 
-WORD read_word(int *clock, WORD address, MEMORY *memory)
+WORD word_read(int *clock, WORD address, MEMORY *memory)
 {
 	/*
 	 * Fetches a word from memory
@@ -449,7 +449,7 @@ WORD read_word(int *clock, WORD address, MEMORY *memory)
 	return data;
 }
 
-void write_word(int *clock, WORD address, WORD value, MEMORY *memory)
+void word_write(int *clock, WORD address, WORD value, MEMORY *memory)
 {
 	/*
 	 * Writes a word to memory
@@ -463,7 +463,7 @@ void write_word(int *clock, WORD address, WORD value, MEMORY *memory)
 
 }
 
-void load_set_flags(CPU *cpu, BYTE register_data)
+void cpu_ld_set_flags(CPU *cpu, BYTE register_data)
 {
 	/*
 	 * Sets the appropriate flags when loading to a register

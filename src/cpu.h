@@ -13,25 +13,28 @@
 // 2^16 = 16K
 #define MEMORY_SIZE 1024 * 64
 
+
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
+
 
 typedef struct
 {
 	BYTE data[MEMORY_SIZE];
 } MEMORY;
 
+
 typedef struct
 {
-	WORD pc;
-	BYTE sp;
+	WORD pc; // Program counter
+	BYTE sp; // Stack pointer
 
-	// Registers
+	/* Registers */
 	BYTE a;
 	BYTE x;
 	BYTE y;
 
-	// Stauts flags
+	/* Status flags */
 	BYTE c : 1; // Carry
 	BYTE z : 1; // Zero
 	BYTE i : 1; // Interrupt
@@ -40,6 +43,7 @@ typedef struct
 	BYTE v : 1; // Overflow
 	BYTE n : 1; // Negative
 } CPU;
+
 
 /* Opcodes */
 /* LDA */
@@ -73,26 +77,30 @@ typedef struct
 #define INS_STA_ABS 0x8D
 #define INS_STA_ABSX 0x9D
 #define INS_STA_ABSY 0x99
-#define INS_STA_INDX 0x81
-#define INS_STA_INDY 0x91
+#define INS_STA_INDX 0x81 // Indexed-indirect
+#define INS_STA_INDY 0x91 // Indirect-indexed
 
 #define INS_JSR 0x20
 
 
 
-// Functions
+/* Functions */
+/* CPU */
 void cpu_reset(CPU *cpu, MEMORY *memory);
 void cpu_ld_set_flags(CPU *cpu, BYTE register_data);
 
+/* Memory */
 void memory_initialise(MEMORY *memory);
 void memory_print(MEMORY *memory, int start, int end);
 
 int instruction_execute(CPU *cpu, MEMORY *memory);
 
+/* Byte */
 BYTE byte_fetch(int *clock, CPU *cpu, MEMORY *memory);
 BYTE byte_read(int *clock, WORD address, MEMORY *memory);
 void byte_write(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory);
 
+/* Word */
 WORD word_fetch(int *clock, CPU *cpu, MEMORY *memory);
 WORD word_read(int *clock, WORD address, MEMORY *memory);
 void word_write(int *clock, WORD address, WORD value, MEMORY *memory);

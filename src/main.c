@@ -44,20 +44,15 @@ void test_sty_zp(CPU cpu, MEMORY memory);
 void test_sty_zpx(CPU cpu, MEMORY memory);
 void test_sty_abs(CPU cpu, MEMORY memory);
 
-/* Tests for TAX */
+/* Tests for transfer instructions */
 void test_tax(CPU cpu, MEMORY memory);
-
-/* Tests for TAX */
 void test_tay(CPU cpu, MEMORY memory);
-
-/* Tests for TXA */
 void test_txa(CPU cpu, MEMORY memory);
-
-/* Tests for TYA */
 void test_tya(CPU cpu, MEMORY memory);
-
-/* Tests for TSX */
 void test_tsx(CPU cpu, MEMORY memory);
+
+/* Tests for stack instructions */
+void test_pha(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -110,6 +105,8 @@ int main(void)
 	test_tya(cpu, memory);
 
 	test_tsx(cpu, memory);
+
+	test_pha(cpu, memory);
 
 	report_print();
 }
@@ -1854,4 +1851,24 @@ void test_txs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 
 	TEST_END();
+}
+
+void test_pha(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("PHA");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_PHA;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[STACK_OFFSET + 0xFF]);
+	EXPECT_EQ(number_of_instructions, 3);
+
+	TEST_END();
+
 }

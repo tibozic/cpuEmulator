@@ -469,7 +469,7 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 						   STACK_OFFSET + cpu->sp,
 						   cpu->pc - 1,
 						   memory);
-				cpu->sp--;
+				cpu->sp -= 2;
 				clock++;
 
 				cpu->pc = abs_address;

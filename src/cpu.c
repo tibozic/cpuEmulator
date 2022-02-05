@@ -396,6 +396,15 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_TAX:
+			{
+				cpu->x = cpu->a;
+				clock++;
+
+				cpu_ld_set_flags(cpu, cpu->x);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

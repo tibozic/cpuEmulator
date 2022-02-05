@@ -90,6 +90,9 @@ typedef struct
 #define INS_STY_ZPX		0x94
 #define INS_STY_ABS		0x8C
 
+/* TAX */
+#define INS_TAX			0xAA
+
 #define INS_JSR			0x20
 
 

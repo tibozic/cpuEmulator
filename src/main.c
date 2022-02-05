@@ -39,6 +39,11 @@ void test_stx_zp(CPU cpu, MEMORY memory);
 void test_stx_zpy(CPU cpu, MEMORY memory);
 void test_stx_abs(CPU cpu, MEMORY memory);
 
+/* Tests for STY */
+void test_sty_zp(CPU cpu, MEMORY memory);
+void test_sty_zpx(CPU cpu, MEMORY memory);
+void test_sty_abs(CPU cpu, MEMORY memory);
+
 int main(void)
 {
 	CPU cpu;
@@ -76,6 +81,10 @@ int main(void)
 	test_stx_zp(cpu, memory);
 	test_stx_zpy(cpu, memory);
 	test_stx_abs(cpu, memory);
+
+	test_sty_zp(cpu, memory);
+	test_sty_zpx(cpu, memory);
+	test_sty_abs(cpu, memory);
 
 	print_report();
 }
@@ -1464,7 +1473,7 @@ void test_stx_abs(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STA absolute");
+	START_TEST("STX absolute");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1476,6 +1485,82 @@ void test_stx_abs(CPU cpu, MEMORY memory)
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(cpu.x, memory.data[0x1234]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+
+}
+
+void test_sty_zp(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STY zero page");
+
+	cpu_reset(&cpu, &memory);
+	cpu.y = 0x12;
+	memory.data[0xFFFC] = INS_STY_ZP;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.y, memory.data[0x0033]);
+	EXPECT_EQ(number_of_instructions, 3);
+
+	END_TEST();
+}
+
+void test_sty_zpx(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STY zero page X");
+
+	cpu_reset(&cpu, &memory);
+	cpu.y = 0x12;
+	cpu.x = 0x13;
+	memory.data[0xFFFC] = INS_STY_ZPX;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.y, memory.data[0x33 + 0x13]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+
+	START_TEST("STY zero page X - page crossed");
+
+	cpu_reset(&cpu, &memory);
+	cpu.y = 0x12;
+	cpu.x = 0xFF;
+	memory.data[0xFFFC] = INS_STY_ZPX;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.y, memory.data[0x32]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+}
+
+void test_sty_abs(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STY absolute");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.y = 0x12;
+	memory.data[0xFFFC] = INS_STY_ABS;
+	memory.data[0xFFFD] = 0x34;
+	memory.data[0xFFFE] = 0x12;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.y, memory.data[0x1234]);
 	EXPECT_EQ(number_of_instructions, 4);
 
 	END_TEST();

@@ -96,6 +96,9 @@ typedef struct
 /* TAY */
 #define INS_TAY			0xA8
 
+/* TXA */
+#define INS_TXA			0x8A
+
 #define INS_JSR			0x20
 
 

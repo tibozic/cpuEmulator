@@ -47,40 +47,40 @@ typedef struct
 
 /* Opcodes */
 /* LDA */
-#define INS_LDA_IM 0xA9
-#define INS_LDA_ZP 0xA5
-#define INS_LDA_ZPX 0xB5
-#define INS_LDA_ABS 0xAD
-#define INS_LDA_ABSX 0xBD
-#define INS_LDA_ABSY 0xB9
-#define INS_LDA_INDX 0xA1 // Indexed-indirect
-#define INS_LDA_INDY 0xB1 // Indirect-indexed
+#define INS_LDA_IM		0xA9
+#define INS_LDA_ZP		0xA5
+#define INS_LDA_ZPX		0xB5
+#define INS_LDA_ABS		0xAD
+#define INS_LDA_ABSX	0xBD
+#define INS_LDA_ABSY	0xB9
+#define INS_LDA_INDX	0xA1 // Indexed-indirect
+#define INS_LDA_INDY	0xB1 // Indirect-indexed
 
 /* LDX*/
-#define INS_LDX_IM 0xA2
-#define INS_LDX_ZP 0xA6
-#define INS_LDX_ZPY 0xB6
-#define INS_LDX_IM 0xA2
-#define INS_LDX_ABS 0xAE
-#define INS_LDX_ABSY 0xBE
+#define INS_LDX_IM		0xA2
+#define INS_LDX_ZP		0xA6
+#define INS_LDX_ZPY		0xB6
+#define INS_LDX_IM		0xA2
+#define INS_LDX_ABS		0xAE
+#define INS_LDX_ABSY	0xBE
 
 /* LDY */
-#define INS_LDY_IM 0xA0
-#define INS_LDY_ZP 0xA4
-#define INS_LDY_ZPX 0xB4
-#define INS_LDY_ABS 0xAC
-#define INS_LDY_ABSX 0xBC
+#define INS_LDY_IM		0xA0
+#define INS_LDY_ZP		0xA4
+#define INS_LDY_ZPX		0xB4
+#define INS_LDY_ABS		0xAC
+#define INS_LDY_ABSX	0xBC
 
 /* STA */
-#define INS_STA_ZP 0x85
-#define INS_STA_ZPX 0x95
-#define INS_STA_ABS 0x8D
-#define INS_STA_ABSX 0x9D
-#define INS_STA_ABSY 0x99
-#define INS_STA_INDX 0x81 // Indexed-indirect
-#define INS_STA_INDY 0x91 // Indirect-indexed
+#define INS_STA_ZP		0x85
+#define INS_STA_ZPX		0x95
+#define INS_STA_ABS		0x8D
+#define INS_STA_ABSX	0x9D
+#define INS_STA_ABSY	0x99
+#define INS_STA_INDX	0x81 // Indexed-indirect
+#define INS_STA_INDY	0x91 // Indirect-indexed
 
-#define INS_JSR 0x20
+#define INS_JSR			0x20
 
 
 

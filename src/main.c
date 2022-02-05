@@ -106,14 +106,14 @@ int main(void)
 
 	test_tya(cpu, memory);
 
-	print_report();
+	report_print();
 }
 
 void test_lda_im(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDA Immediate");
+	TEST_START("LDA Immediate");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_IM;
@@ -124,9 +124,9 @@ void test_lda_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Immediate - negative");
+	TEST_START("LDA Immediate - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_IM;
@@ -137,9 +137,9 @@ void test_lda_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Immediate - zero");
+	TEST_START("LDA Immediate - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_IM;
@@ -150,13 +150,13 @@ void test_lda_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
-	END_TEST();
+	TEST_END();
 }
 
 void test_lda_zp(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
-	START_TEST("LDA Zero page");
+	TEST_START("LDA Zero page");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_ZP;
@@ -169,9 +169,9 @@ void test_lda_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Zero page - negative");
+	TEST_START("LDA Zero page - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_ZP;
@@ -184,9 +184,9 @@ void test_lda_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Zero page - zero");
+	TEST_START("LDA Zero page - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_ZP;
@@ -199,14 +199,14 @@ void test_lda_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_lda_zpx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDA  Zero page X");
+	TEST_START("LDA  Zero page X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x7;
@@ -220,9 +220,9 @@ void test_lda_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA  Zero page X - negative");
+	TEST_START("LDA  Zero page X - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x7;
@@ -236,9 +236,9 @@ void test_lda_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA  Zero page X - zero");
+	TEST_START("LDA  Zero page X - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x7;
@@ -252,14 +252,14 @@ void test_lda_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_lda_abs(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDA Absolute");
+	TEST_START("LDA Absolute");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_ABS;
@@ -273,9 +273,9 @@ void test_lda_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute - negative");
+	TEST_START("LDA Absolute - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_ABS;
@@ -289,9 +289,9 @@ void test_lda_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute - zero");
+	TEST_START("LDA Absolute - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDA_ABS;
@@ -305,14 +305,14 @@ void test_lda_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_lda_absx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDA Absolute X");
+	TEST_START("LDA Absolute X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x3;
@@ -327,9 +327,9 @@ void test_lda_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute X - negative");
+	TEST_START("LDA Absolute X - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x3;
@@ -344,9 +344,9 @@ void test_lda_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute X - zero");
+	TEST_START("LDA Absolute X - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x3;
@@ -361,9 +361,9 @@ void test_lda_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute X page crossed");
+	TEST_START("LDA Absolute X page crossed");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0xF;
@@ -378,9 +378,9 @@ void test_lda_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute X page crossed - negative");
+	TEST_START("LDA Absolute X page crossed - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0xF;
@@ -395,9 +395,9 @@ void test_lda_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute X page crossed- zero");
+	TEST_START("LDA Absolute X page crossed- zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0xF;
@@ -412,14 +412,14 @@ void test_lda_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_lda_absy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDA Absolute Y");
+	TEST_START("LDA Absolute Y");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x3;
@@ -434,9 +434,9 @@ void test_lda_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute Y - negative");
+	TEST_START("LDA Absolute Y - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x3;
@@ -451,9 +451,9 @@ void test_lda_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute Y - zero");
+	TEST_START("LDA Absolute Y - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x3;
@@ -468,9 +468,9 @@ void test_lda_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute Y page crossed");
+	TEST_START("LDA Absolute Y page crossed");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0xF;
@@ -485,9 +485,9 @@ void test_lda_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute Y page crossed - negative");
+	TEST_START("LDA Absolute Y page crossed - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0xF;
@@ -502,9 +502,9 @@ void test_lda_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Absolute Y page crossed- zero");
+	TEST_START("LDA Absolute Y page crossed- zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0xF;
@@ -519,14 +519,14 @@ void test_lda_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_lda_indx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDA Indirect X");
+	TEST_START("LDA Indirect X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x04;
@@ -542,9 +542,9 @@ void test_lda_indx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Indirect X - negative");
+	TEST_START("LDA Indirect X - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x04;
@@ -560,9 +560,9 @@ void test_lda_indx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Indirect X - zero");
+	TEST_START("LDA Indirect X - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x04;
@@ -578,7 +578,7 @@ void test_lda_indx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
 }
 
@@ -586,7 +586,7 @@ void test_lda_indy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDA Indirect Y");
+	TEST_START("LDA Indirect Y");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x04;
@@ -602,9 +602,9 @@ void test_lda_indy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Indirect Y - negative");
+	TEST_START("LDA Indirect Y - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x04;
@@ -620,9 +620,9 @@ void test_lda_indy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Indirect Y - zero");
+	TEST_START("LDA Indirect Y - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x04;
@@ -638,9 +638,9 @@ void test_lda_indy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDA Indirect Y - page crossed");
+	TEST_START("LDA Indirect Y - page crossed");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x04;
@@ -656,14 +656,14 @@ void test_lda_indy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldx_im(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDX Immediate");
+	TEST_START("LDX Immediate");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_IM;
@@ -674,9 +674,9 @@ void test_ldx_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Immediate - negative");
+	TEST_START("LDX Immediate - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_IM;
@@ -687,9 +687,9 @@ void test_ldx_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Immediate - zero");
+	TEST_START("LDX Immediate - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_IM;
@@ -700,13 +700,13 @@ void test_ldx_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldx_zp(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
-	START_TEST("LDX Zero page");
+	TEST_START("LDX Zero page");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_ZP;
@@ -719,9 +719,9 @@ void test_ldx_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Zero page - negative");
+	TEST_START("LDX Zero page - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_ZP;
@@ -734,9 +734,9 @@ void test_ldx_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Zero page - zero");
+	TEST_START("LDX Zero page - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_ZP;
@@ -749,14 +749,14 @@ void test_ldx_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldx_zpy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDX  Zero page Y");
+	TEST_START("LDX  Zero page Y");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x7;
@@ -770,9 +770,9 @@ void test_ldx_zpy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX  Zero page Y - negative");
+	TEST_START("LDX  Zero page Y - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x7;
@@ -786,9 +786,9 @@ void test_ldx_zpy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX  Zero page Y - zero");
+	TEST_START("LDX  Zero page Y - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x7;
@@ -802,14 +802,14 @@ void test_ldx_zpy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldx_abs(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDX Absolute");
+	TEST_START("LDX Absolute");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_ABS;
@@ -823,9 +823,9 @@ void test_ldx_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Absolute - negative");
+	TEST_START("LDX Absolute - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_ABS;
@@ -839,9 +839,9 @@ void test_ldx_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Absolute - zero");
+	TEST_START("LDX Absolute - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDX_ABS;
@@ -855,14 +855,14 @@ void test_ldx_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldx_absy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDX Absolute Y");
+	TEST_START("LDX Absolute Y");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x3;
@@ -877,9 +877,9 @@ void test_ldx_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Absolute Y - negative");
+	TEST_START("LDX Absolute Y - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x3;
@@ -894,9 +894,9 @@ void test_ldx_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Absolute Y - zero");
+	TEST_START("LDX Absolute Y - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x3;
@@ -911,9 +911,9 @@ void test_ldx_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Absolute Y page crossed");
+	TEST_START("LDX Absolute Y page crossed");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0xF;
@@ -928,9 +928,9 @@ void test_ldx_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Absolute Y page crossed - negative");
+	TEST_START("LDX Absolute Y page crossed - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0xF;
@@ -945,9 +945,9 @@ void test_ldx_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDX Absolute Y page crossed - zero");
+	TEST_START("LDX Absolute Y page crossed - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0xF;
@@ -962,14 +962,14 @@ void test_ldx_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldy_im(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDY Immediate");
+	TEST_START("LDY Immediate");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_IM;
@@ -980,9 +980,9 @@ void test_ldy_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Immediate - negative");
+	TEST_START("LDY Immediate - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_IM;
@@ -993,9 +993,9 @@ void test_ldy_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Immediate - zero");
+	TEST_START("LDY Immediate - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_IM;
@@ -1006,13 +1006,13 @@ void test_ldy_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldy_zp(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
-	START_TEST("LDY Zero page");
+	TEST_START("LDY Zero page");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_ZP;
@@ -1025,9 +1025,9 @@ void test_ldy_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Zero page - negative");
+	TEST_START("LDY Zero page - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_ZP;
@@ -1040,9 +1040,9 @@ void test_ldy_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Zero page - zero");
+	TEST_START("LDY Zero page - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_ZP;
@@ -1055,14 +1055,14 @@ void test_ldy_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldy_zpx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDY  Zero page X");
+	TEST_START("LDY  Zero page X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x7;
@@ -1076,9 +1076,9 @@ void test_ldy_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY  Zero page X - negative");
+	TEST_START("LDY  Zero page X - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x7;
@@ -1092,9 +1092,9 @@ void test_ldy_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY  Zero page X - zero");
+	TEST_START("LDY  Zero page X - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x7;
@@ -1108,14 +1108,14 @@ void test_ldy_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldy_abs(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDY Absolute");
+	TEST_START("LDY Absolute");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_ABS;
@@ -1129,9 +1129,9 @@ void test_ldy_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Absolute - negative");
+	TEST_START("LDY Absolute - negative");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_ABS;
@@ -1145,9 +1145,9 @@ void test_ldy_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Absolute - zero");
+	TEST_START("LDY Absolute - zero");
 
 	cpu_reset(&cpu, &memory);
 	memory.data[0xFFFC] = INS_LDY_ABS;
@@ -1161,14 +1161,14 @@ void test_ldy_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_ldy_absx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("LDY Absolute X");
+	TEST_START("LDY Absolute X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x3;
@@ -1183,9 +1183,9 @@ void test_ldy_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Absolute X - negative");
+	TEST_START("LDY Absolute X - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x3;
@@ -1200,9 +1200,9 @@ void test_ldy_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Absolute X - zero");
+	TEST_START("LDY Absolute X - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x3;
@@ -1217,9 +1217,9 @@ void test_ldy_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Absolute X page crossed");
+	TEST_START("LDY Absolute X page crossed");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0xF;
@@ -1234,9 +1234,9 @@ void test_ldy_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Absolute X page crossed - negative");
+	TEST_START("LDY Absolute X page crossed - negative");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0xF;
@@ -1251,9 +1251,9 @@ void test_ldy_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 0);
 	EXPECT_EQ(cpu.n, 1);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("LDY Absolute X page crossed - zero");
+	TEST_START("LDY Absolute X page crossed - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0xF;
@@ -1268,14 +1268,14 @@ void test_ldy_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.z, 1);
 	EXPECT_EQ(cpu.n, 0);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_sta_zp(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STA zero page");
+	TEST_START("STA zero page");
 
 	cpu_reset(&cpu, &memory);
 	cpu.a = 0x12;
@@ -1287,14 +1287,14 @@ void test_sta_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, memory.data[0x0033]);
 	EXPECT_EQ(number_of_instructions, 3);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_sta_zpx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STA zero page X");
+	TEST_START("STA zero page X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.a = 0x12;
@@ -1307,9 +1307,9 @@ void test_sta_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, memory.data[0x33 + 0x13]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("STA zero page X - page crossed");
+	TEST_START("STA zero page X - page crossed");
 
 	cpu_reset(&cpu, &memory);
 	cpu.a = 0x12;
@@ -1322,14 +1322,14 @@ void test_sta_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, memory.data[0x32]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_sta_abs(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STA absolute");
+	TEST_START("STA absolute");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1343,7 +1343,7 @@ void test_sta_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, memory.data[0x1234]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 
 }
 
@@ -1351,7 +1351,7 @@ void test_sta_absx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STA absolute X");
+	TEST_START("STA absolute X");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1366,14 +1366,14 @@ void test_sta_absx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, memory.data[0x1234 + cpu.x]);
 	EXPECT_EQ(number_of_instructions, 5);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_sta_absy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STA absolute Y");
+	TEST_START("STA absolute Y");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1388,14 +1388,14 @@ void test_sta_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, memory.data[0x1234 + cpu.y]);
 	EXPECT_EQ(number_of_instructions, 5);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_sta_indx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STA Indirect X");
+	TEST_START("STA Indirect X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.a = 0x12;
@@ -1410,14 +1410,14 @@ void test_sta_indx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, memory.data[0x8000]);
 	EXPECT_EQ(number_of_instructions, 6);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_sta_indy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STA Indirect X");
+	TEST_START("STA Indirect X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.a = 0x12;
@@ -1432,14 +1432,14 @@ void test_sta_indy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, memory.data[0x8000 + cpu.y]);
 	EXPECT_EQ(number_of_instructions, 6);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_stx_zp(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STX zero page");
+	TEST_START("STX zero page");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x12;
@@ -1451,14 +1451,14 @@ void test_stx_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.x, memory.data[0x0033]);
 	EXPECT_EQ(number_of_instructions, 3);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_stx_zpy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STX zero page Y");
+	TEST_START("STX zero page Y");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x12;
@@ -1471,9 +1471,9 @@ void test_stx_zpy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.x, memory.data[0x33 + 0x13]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("STX zero page Y - page crossed");
+	TEST_START("STX zero page Y - page crossed");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x12;
@@ -1486,14 +1486,14 @@ void test_stx_zpy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.x, memory.data[0x32]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_stx_abs(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STX absolute");
+	TEST_START("STX absolute");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1507,7 +1507,7 @@ void test_stx_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.x, memory.data[0x1234]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 
 }
 
@@ -1515,7 +1515,7 @@ void test_sty_zp(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STY zero page");
+	TEST_START("STY zero page");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x12;
@@ -1527,14 +1527,14 @@ void test_sty_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.y, memory.data[0x0033]);
 	EXPECT_EQ(number_of_instructions, 3);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_sty_zpx(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STY zero page X");
+	TEST_START("STY zero page X");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x12;
@@ -1547,9 +1547,9 @@ void test_sty_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.y, memory.data[0x33 + 0x13]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("STY zero page X - page crossed");
+	TEST_START("STY zero page X - page crossed");
 
 	cpu_reset(&cpu, &memory);
 	cpu.y = 0x12;
@@ -1562,14 +1562,14 @@ void test_sty_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.y, memory.data[0x32]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_sty_abs(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("STY absolute");
+	TEST_START("STY absolute");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1583,7 +1583,7 @@ void test_sty_abs(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.y, memory.data[0x1234]);
 	EXPECT_EQ(number_of_instructions, 4);
 
-	END_TEST();
+	TEST_END();
 
 }
 
@@ -1591,7 +1591,7 @@ void test_tax(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("TAX");
+	TEST_START("TAX");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1603,9 +1603,9 @@ void test_tax(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.x, cpu.a);
 	EXPECT_EQ(number_of_instructions, 2);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("TAX - zero");
+	TEST_START("TAX - zero");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1618,9 +1618,9 @@ void test_tax(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.z);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("TAX - negative");
+	TEST_START("TAX - negative");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1633,14 +1633,14 @@ void test_tax(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.n);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_tay(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("TAY");
+	TEST_START("TAY");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1652,9 +1652,9 @@ void test_tay(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.y, cpu.a);
 	EXPECT_EQ(number_of_instructions, 2);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("TAY - zero");
+	TEST_START("TAY - zero");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1667,9 +1667,9 @@ void test_tay(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.z);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("TAX - negative");
+	TEST_START("TAX - negative");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1682,14 +1682,14 @@ void test_tay(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.n);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_txa(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("TXA");
+	TEST_START("TXA");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1701,9 +1701,9 @@ void test_txa(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, cpu.x);
 	EXPECT_EQ(number_of_instructions, 2);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("TXA - zero");
+	TEST_START("TXA - zero");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1716,9 +1716,9 @@ void test_txa(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.z);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("TXA - negative");
+	TEST_START("TXA - negative");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1731,14 +1731,14 @@ void test_txa(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.n);
 
-	END_TEST();
+	TEST_END();
 }
 
 void test_tya(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	START_TEST("TYA");
+	TEST_START("TYA");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1750,9 +1750,9 @@ void test_tya(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, cpu.y);
 	EXPECT_EQ(number_of_instructions, 2);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("TYA - zero");
+	TEST_START("TYA - zero");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1765,9 +1765,9 @@ void test_tya(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.z);
 
-	END_TEST();
+	TEST_END();
 
-	START_TEST("TYA - negative");
+	TEST_START("TYA - negative");
 
 	cpu_reset(&cpu, &memory);
 
@@ -1780,5 +1780,5 @@ void test_tya(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.n);
 
-	END_TEST();
+	TEST_END();
 }

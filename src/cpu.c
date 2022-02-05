@@ -423,6 +423,15 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_TYA:
+			{
+				cpu->a = cpu->y;
+				clock++;
+
+				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

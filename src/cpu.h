@@ -99,6 +99,9 @@ typedef struct
 /* TXA */
 #define INS_TXA			0x8A
 
+/* TXA */
+#define INS_TYA			0x98
+
 #define INS_JSR			0x20
 
 

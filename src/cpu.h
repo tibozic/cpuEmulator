@@ -46,6 +46,7 @@ typedef struct
 
 
 /* Opcodes */
+/* Load instructions */
 /* LDA */
 #define INS_LDA_IM		0xA9
 #define INS_LDA_ZP		0xA5
@@ -71,6 +72,7 @@ typedef struct
 #define INS_LDY_ABS		0xAC
 #define INS_LDY_ABSX	0xBC
 
+/* Store instructions */
 /* STA */
 #define INS_STA_ZP		0x85
 #define INS_STA_ZPX		0x95
@@ -90,18 +92,16 @@ typedef struct
 #define INS_STY_ZPX		0x94
 #define INS_STY_ABS		0x8C
 
-/* TAX */
+/* Transfer instructions */
 #define INS_TAX			0xAA
-/* TAY */
 #define INS_TAY			0xA8
-/* TXA */
 #define INS_TXA			0x8A
-/* TXA */
 #define INS_TYA			0x98
-/* TSX */
 #define INS_TSX			0xBA
-/* TXS */
 #define INS_TXS			0x9A
+
+/* Stack instructions */
+#define INS_PHA			0x48
 
 #define INS_JSR			0x20
 

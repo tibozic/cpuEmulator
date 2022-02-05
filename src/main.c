@@ -1603,6 +1603,8 @@ void test_tax(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.x, cpu.a);
 	EXPECT_EQ(number_of_instructions, 2);
 
+	END_TEST();
+
 	START_TEST("TAX - zero");
 
 	cpu_reset(&cpu, &memory);
@@ -1615,6 +1617,8 @@ void test_tax(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.x, cpu.a);
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.z);
+
+	END_TEST();
 
 	START_TEST("TAX - negative");
 
@@ -1648,6 +1652,8 @@ void test_tay(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.y, cpu.a);
 	EXPECT_EQ(number_of_instructions, 2);
 
+	END_TEST();
+
 	START_TEST("TAY - zero");
 
 	cpu_reset(&cpu, &memory);
@@ -1660,6 +1666,8 @@ void test_tay(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.y, cpu.a);
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.z);
+
+	END_TEST();
 
 	START_TEST("TAX - negative");
 
@@ -1693,6 +1701,8 @@ void test_txa(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, cpu.x);
 	EXPECT_EQ(number_of_instructions, 2);
 
+	END_TEST();
+
 	START_TEST("TXA - zero");
 
 	cpu_reset(&cpu, &memory);
@@ -1705,6 +1715,8 @@ void test_txa(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, cpu.x);
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.z);
+
+	END_TEST();
 
 	START_TEST("TXA - negative");
 
@@ -1738,6 +1750,8 @@ void test_tya(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, cpu.y);
 	EXPECT_EQ(number_of_instructions, 2);
 
+	END_TEST();
+
 	START_TEST("TYA - zero");
 
 	cpu_reset(&cpu, &memory);
@@ -1750,6 +1764,8 @@ void test_tya(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, cpu.y);
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.z);
+
+	END_TEST();
 
 	START_TEST("TYA - negative");
 

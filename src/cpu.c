@@ -446,8 +446,6 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 				cpu->sp = cpu->x;
 				clock++;
 
-				cpu_ld_set_flags(cpu, cpu->sp);
-
 				break;
 			}
 			case INS_JSR:

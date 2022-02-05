@@ -100,6 +100,8 @@ typedef struct
 #define INS_TYA			0x98
 /* TSX */
 #define INS_TSX			0xBA
+/* TXS */
+#define INS_TXS			0x9A
 
 #define INS_JSR			0x20
 

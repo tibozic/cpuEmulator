@@ -44,6 +44,9 @@ void test_sty_zp(CPU cpu, MEMORY memory);
 void test_sty_zpx(CPU cpu, MEMORY memory);
 void test_sty_abs(CPU cpu, MEMORY memory);
 
+/* Tests for TAX */
+void test_tax(CPU cpu, MEMORY memory);
+
 int main(void)
 {
 	CPU cpu;
@@ -85,6 +88,8 @@ int main(void)
 	test_sty_zp(cpu, memory);
 	test_sty_zpx(cpu, memory);
 	test_sty_abs(cpu, memory);
+
+	test_tax(cpu, memory);
 
 	print_report();
 }
@@ -1565,4 +1570,49 @@ void test_sty_abs(CPU cpu, MEMORY memory)
 
 	END_TEST();
 
+}
+
+void test_tax(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("TAX");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_TAX;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, cpu.a);
+	EXPECT_EQ(number_of_instructions, 2);
+
+	START_TEST("TAX - zero");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x0;
+	memory.data[0xFFFC] = INS_TAX;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, cpu.a);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_TRUE(cpu.z);
+
+	START_TEST("TAX - negative");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x42;
+	memory.data[0xFFFC] = INS_TAX;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, cpu.a);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_TRUE(cpu.n);
+
+	END_TEST();
 }

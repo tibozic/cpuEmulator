@@ -2,10 +2,10 @@
 
 void cpu_reset(CPU *cpu, MEMORY *memory)
 {
+	/* Reset the CPU to it's initial state */
 	cpu->pc = 0xFFFC;
 
-	// With stack offset this is 0x01FF
-	cpu->sp = 0xFF;
+	cpu->sp = 0xFF; // With stack offset this is 0x01FF
 
 	cpu->d = 0;
 
@@ -14,6 +14,7 @@ void cpu_reset(CPU *cpu, MEMORY *memory)
 
 void memory_initialise(MEMORY *memory)
 {
+	/* Initialise all memory to zero */
 	for (unsigned int i = 0; i < MEMORY_SIZE; ++i)
 	{
 		memory->data[i] = 0;
@@ -456,9 +457,9 @@ void word_write(int *clock, WORD address, WORD value, MEMORY *memory)
 	 * Uses 2 clock cycles
 	*/
 
-	memory->data[address]		= (value & 0xFF);
+	memory->data[address] = (value & 0xFF);
 	(*clock)++;
-	memory->data[address + 1]	= (value >> 8);
+	memory->data[address + 1] = (value >> 8);
 	(*clock)++;
 
 }

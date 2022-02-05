@@ -561,7 +561,8 @@ void cpu_ld_set_flags(CPU *cpu, BYTE register_data)
 	*/
 
 	cpu->z = (register_data == 0);
-	// Check if 7th bit of cpu->a is 1 (number is negative)
+
+	/* if 7th bit of register is 1, the number is negative */
 	cpu->n = ((register_data & (1 << 6)) > 0);
 }
 

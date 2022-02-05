@@ -1,6 +1,7 @@
 #include "includes/mytests.h"
 #include "cpu.h"
 
+/* Tests for LDA */
 void test_lda_im(CPU cpu, MEMORY memory);
 void test_lda_zp(CPU cpu, MEMORY memory);
 void test_lda_zpx(CPU cpu, MEMORY memory);
@@ -10,18 +11,21 @@ void test_lda_indx(CPU cpu, MEMORY memory);
 void test_lda_indy(CPU cpu, MEMORY memory);
 void test_lda_absy(CPU cpu, MEMORY memory);
 
+/* Tests for LDX */
 void test_ldx_im(CPU cpu, MEMORY memory);
 void test_ldx_zp(CPU cpu, MEMORY memory);
 void test_ldx_zpy(CPU cpu, MEMORY memory);
 void test_ldx_abs(CPU cpu, MEMORY memory);
 void test_ldx_absy(CPU cpu, MEMORY memory);
 
+/* Tests for LDY */
 void test_ldy_im(CPU cpu, MEMORY memory);
 void test_ldy_zp(CPU cpu, MEMORY memory);
 void test_ldy_zpx(CPU cpu, MEMORY memory);
 void test_ldy_abs(CPU cpu, MEMORY memory);
 void test_ldy_absx(CPU cpu, MEMORY memory);
 
+/* Tests for STA */
 void test_sta_zp(CPU cpu, MEMORY memory);
 void test_sta_zpx(CPU cpu, MEMORY memory);
 void test_sta_abs(CPU cpu, MEMORY memory);
@@ -29,6 +33,11 @@ void test_sta_absx(CPU cpu, MEMORY memory);
 void test_sta_absy(CPU cpu, MEMORY memory);
 void test_sta_indx(CPU cpu, MEMORY memory);
 void test_sta_indy(CPU cpu, MEMORY memory);
+
+/* Tests for STX */
+void test_stx_zp(CPU cpu, MEMORY memory);
+void test_stx_zpy(CPU cpu, MEMORY memory);
+void test_stx_abs(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -63,6 +72,10 @@ int main(void)
 	test_sta_absy(cpu, memory);
 	test_sta_indx(cpu, memory);
 	test_sta_indy(cpu, memory);
+
+	test_stx_zp(cpu, memory);
+	test_stx_zpy(cpu, memory);
+	test_stx_abs(cpu, memory);
 
 	print_report();
 }
@@ -1391,4 +1404,80 @@ void test_sta_indy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 6);
 
 	END_TEST();
+}
+
+void test_stx_zp(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STX zero page");
+
+	cpu_reset(&cpu, &memory);
+	cpu.x = 0x12;
+	memory.data[0xFFFC] = INS_STX_ZP;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, memory.data[0x0033]);
+	EXPECT_EQ(number_of_instructions, 3);
+
+	END_TEST();
+}
+
+void test_stx_zpy(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STX zero page Y");
+
+	cpu_reset(&cpu, &memory);
+	cpu.x = 0x12;
+	cpu.y = 0x13;
+	memory.data[0xFFFC] = INS_STX_ZPY;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, memory.data[0x33 + 0x13]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+
+	START_TEST("STX zero page Y - page crossed");
+
+	cpu_reset(&cpu, &memory);
+	cpu.x = 0x12;
+	cpu.y = 0xFF;
+	memory.data[0xFFFC] = INS_STX_ZPY;
+	memory.data[0xFFFD] = 0x0033;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, memory.data[0x32]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+}
+
+void test_stx_abs(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("STA absolute");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.x = 0x12;
+	memory.data[0xFFFC] = INS_STX_ABS;
+	memory.data[0xFFFD] = 0x34;
+	memory.data[0xFFFE] = 0x12;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.x, memory.data[0x1234]);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	END_TEST();
+
 }

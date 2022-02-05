@@ -53,6 +53,9 @@ void test_tay(CPU cpu, MEMORY memory);
 /* Tests for TXA */
 void test_txa(CPU cpu, MEMORY memory);
 
+/* Tests for TYA */
+void test_tya(CPU cpu, MEMORY memory);
+
 int main(void)
 {
 	CPU cpu;
@@ -100,6 +103,8 @@ int main(void)
 	test_tay(cpu, memory);
 
 	test_txa(cpu, memory);
+
+	test_tya(cpu, memory);
 
 	print_report();
 }
@@ -1711,6 +1716,51 @@ void test_txa(CPU cpu, MEMORY memory)
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(cpu.a, cpu.x);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_TRUE(cpu.n);
+
+	END_TEST();
+}
+
+void test_tya(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	START_TEST("TYA");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.y = 0x12;
+	memory.data[0xFFFC] = INS_TYA;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, cpu.y);
+	EXPECT_EQ(number_of_instructions, 2);
+
+	START_TEST("TYA - zero");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.y = 0x0;
+	memory.data[0xFFFC] = INS_TYA;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, cpu.y);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_TRUE(cpu.z);
+
+	START_TEST("TYA - negative");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.y = 0x42;
+	memory.data[0xFFFC] = INS_TYA;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, cpu.y);
 	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_TRUE(cpu.n);
 

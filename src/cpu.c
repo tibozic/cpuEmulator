@@ -369,6 +369,33 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_STY_ZP:
+			{
+				zp_address = byte_fetch(&clock, cpu, memory);
+
+				byte_write(&clock, zp_address, cpu->y, cpu, memory);
+
+				break;
+			}
+			case INS_STY_ZPX:
+			{
+				zp_address = byte_fetch(&clock, cpu, memory);
+
+				zp_addressx = zp_address + cpu->x;
+				clock++;
+
+				byte_write(&clock, zp_addressx, cpu->y, cpu, memory);
+
+				break;
+			}
+			case INS_STY_ABS:
+			{
+				abs_address = word_fetch(&clock, cpu, memory);
+
+				byte_write(&clock, abs_address, cpu->y, cpu, memory);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

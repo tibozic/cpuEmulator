@@ -85,6 +85,11 @@ typedef struct
 #define INS_STX_ZPY		0x96
 #define INS_STX_ABS		0x8E
 
+/* STY */
+#define INS_STY_ZP		0x84
+#define INS_STY_ZPX		0x94
+#define INS_STY_ABS		0x8C
+
 #define INS_JSR			0x20
 
 

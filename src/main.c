@@ -1836,3 +1836,52 @@ void test_tsx(CPU cpu, MEMORY memory)
 
 	TEST_END();
 }
+
+void test_txs(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("TXS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.x = 0x12;
+	memory.data[0xFFFC] = INS_TXS;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.sp, cpu.x);
+	EXPECT_EQ(number_of_instructions, 2);
+
+	TEST_END();
+
+	TEST_START("TXS - zero");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.x = 0x0;
+	memory.data[0xFFFC] = INS_TXS;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.sp, cpu.x);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_TRUE(cpu.z);
+
+	TEST_END();
+
+	TEST_START("TXS - negative");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.x = 0x42;
+	memory.data[0xFFFC] = INS_TXS;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.sp, cpu.x);
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_TRUE(cpu.n);
+
+	TEST_END();
+}

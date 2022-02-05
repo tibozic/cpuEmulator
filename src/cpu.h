@@ -93,6 +93,9 @@ typedef struct
 /* TAX */
 #define INS_TAX			0xAA
 
+/* TAY */
+#define INS_TAY			0xA8
+
 #define INS_JSR			0x20
 
 

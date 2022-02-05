@@ -80,6 +80,11 @@ typedef struct
 #define INS_STA_INDX	0x81 // Indexed-indirect
 #define INS_STA_INDY	0x91 // Indirect-indexed
 
+/* STX */
+#define INS_STX_ZP		0x86
+#define INS_STX_ZPY		0x96
+#define INS_STX_ABS		0x8E
+
 #define INS_JSR			0x20
 
 

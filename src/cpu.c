@@ -595,7 +595,7 @@ void cpu_ld_set_flags(CPU *cpu, BYTE register_data)
 	cpu->n = ((register_data & (1 << 6)) > 0);
 }
 
-void print_memory(MEMORY *memory, int start, int end)
+void memory_print(MEMORY *memory, int start, int end)
 {
 	assert(end <= MEMORY_SIZE);
 	for (int i = start; i < end; ++i)

@@ -53,6 +53,7 @@ void test_tsx(CPU cpu, MEMORY memory);
 
 /* Tests for stack instructions */
 void test_pha(CPU cpu, MEMORY memory);
+void test_pla(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -107,6 +108,8 @@ int main(void)
 	test_tsx(cpu, memory);
 
 	test_pha(cpu, memory);
+
+	test_pla(cpu, memory);
 
 	report_print();
 }
@@ -1870,5 +1873,23 @@ void test_pha(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 3);
 
 	TEST_END();
+}
 
+void test_pla(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("PLA");
+
+	cpu_reset(&cpu, &memory);
+
+	memory.data[0xFFFC] = INS_PLA;
+	memory.data[STACK_OFFSET + cpu.sp] = 0x12;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[STACK_OFFSET + 0xFF]);
+	EXPECT_EQ(number_of_instructions, 3);
+
+	TEST_END();
 }

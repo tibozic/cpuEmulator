@@ -102,6 +102,9 @@ typedef struct
 
 /* Stack instructions */
 #define INS_PHA			0x48
+#define INS_PLA			0x68
+// TODO: Implement the INS_PHP
+#define INS_PHP			0x08
 
 #define INS_JSR			0x20
 

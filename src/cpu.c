@@ -461,6 +461,17 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_PLA:
+			{
+				cpu->a = byte_read(&clock,
+						   (STACK_OFFSET + cpu->sp),
+						   memory);
+
+				cpu->sp++;
+				clock++;
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

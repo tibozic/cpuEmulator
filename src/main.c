@@ -1892,4 +1892,34 @@ void test_pla(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 3);
 
 	TEST_END();
+
+	TEST_START("PLA - negative value");
+
+	cpu_reset(&cpu, &memory);
+
+	memory.data[0xFFFC] = INS_PLA;
+	memory.data[STACK_OFFSET + cpu.sp] = 0x42;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[STACK_OFFSET + 0xFF]);
+	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_TRUE(cpu.n);
+
+	TEST_END();
+
+	TEST_START("PLA - zero value");
+
+	cpu_reset(&cpu, &memory);
+
+	memory.data[0xFFFC] = INS_PLA;
+	memory.data[STACK_OFFSET + cpu.sp] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, memory.data[STACK_OFFSET + 0xFF]);
+	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_TRUE(cpu.z);
+
+	TEST_END();
 }

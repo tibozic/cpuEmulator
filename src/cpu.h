@@ -114,6 +114,7 @@ typedef struct
 /* CPU */
 void cpu_reset(CPU *cpu, MEMORY *memory);
 void cpu_ld_set_flags(CPU *cpu, BYTE register_data);
+void cpu_set_flags_stack(CPU *cpu, BYTE stack_data);
 
 /* Memory */
 void memory_initialise(MEMORY *memory);

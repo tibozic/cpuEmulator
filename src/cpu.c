@@ -629,6 +629,20 @@ void cpu_ld_set_flags(CPU *cpu, BYTE register_data)
 	cpu->n = ((register_data & (1 << 6)) > 0);
 }
 
+void cpu_set_flags_stack(CPU *cpu, BYTE stack_data)
+{
+	/*
+	 * Sets the flags based on the byte that got read from the stack
+	*/
+	cpu->c = (stack_data & 0b00000001) > 0;
+	cpu->z = (stack_data & 0b00000010) > 0;
+	cpu->i = (stack_data & 0b00000100) > 0;
+	cpu->d = (stack_data & 0b00001000) > 0;
+	cpu->b = (stack_data & 0b00010000) > 0;
+	cpu->v = (stack_data & 0b00100000) > 0;
+	cpu->n = (stack_data & 0b01000000) > 0;
+}
+
 void memory_print(MEMORY *memory, int start, int end)
 {
 	assert(end <= MEMORY_SIZE);

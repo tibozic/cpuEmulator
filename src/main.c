@@ -54,6 +54,7 @@ void test_tsx(CPU cpu, MEMORY memory);
 /* Tests for stack instructions */
 void test_pha(CPU cpu, MEMORY memory);
 void test_pla(CPU cpu, MEMORY memory);
+void test_plp(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -98,18 +99,14 @@ int main(void)
 	test_sty_abs(cpu, memory);
 
 	test_tax(cpu, memory);
-
 	test_tay(cpu, memory);
-
 	test_txa(cpu, memory);
-
 	test_tya(cpu, memory);
-
 	test_tsx(cpu, memory);
 
 	test_pha(cpu, memory);
-
 	test_pla(cpu, memory);
+	test_plp(cpu, memory);
 
 	report_print();
 }
@@ -1926,7 +1923,53 @@ void test_pla(CPU cpu, MEMORY memory)
 
 	TEST_END();
 }
+
+void test_plp(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("PLP - All FALSE");
+
+	cpu_reset(&cpu, &memory);
+
+	memory.data[0xFFFC] = INS_PLP;
+	memory.data[STACK_OFFSET + cpu.sp] = 0x0;
+	cpu.sp--;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_FALSE(cpu.c);
+	EXPECT_FALSE(cpu.z);
+	EXPECT_FALSE(cpu.i);
+	EXPECT_FALSE(cpu.d);
+	EXPECT_FALSE(cpu.b);
+	EXPECT_FALSE(cpu.v);
+	EXPECT_FALSE(cpu.n);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	TEST_END();
+
+	TEST_START("PLP - All TRUE");
+
+	cpu_reset(&cpu, &memory);
+
+	memory.data[0xFFFC] = INS_PLP;
+	memory.data[STACK_OFFSET + cpu.sp] = 0xFF;
+	cpu.sp--;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_TRUE(cpu.c);
 	EXPECT_TRUE(cpu.z);
+	EXPECT_TRUE(cpu.i);
+	EXPECT_TRUE(cpu.d);
+	EXPECT_TRUE(cpu.b);
+	EXPECT_TRUE(cpu.v);
+	EXPECT_TRUE(cpu.n);
+	EXPECT_EQ(number_of_instructions, 4);
+
+	TEST_END();
+}
 
 	TEST_END();
 }

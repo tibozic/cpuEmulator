@@ -450,25 +450,13 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 			}
 			case INS_PHA:
 			{
-				byte_write(&clock,
-						   (STACK_OFFSET + cpu->sp),
-						   cpu->a,
-						   cpu,
-						   memory);
-
-				cpu->sp--;
-				clock++;
+				byte_push(&clock, cpu->a, cpu, memory);
 
 				break;
 			}
 			case INS_PLA:
 			{
-				cpu->a = byte_read(&clock,
-						   (STACK_OFFSET + cpu->sp),
-						   memory);
-
-				cpu->sp++;
-				clock++;
+				cpu->a = byte_pop(&clock, cpu, memory);
 
 				cpu_ld_set_flags(cpu, cpu->a);
 
@@ -533,6 +521,26 @@ BYTE byte_read(int *clock, WORD address, MEMORY *memory)
 	return data;
 }
 
+BYTE byte_pop(int *clock, CPU *cpu, MEMORY *memory)
+{
+	/*
+	 * Pops a byte of data from the stack
+	*/
+
+	// SP is pointing at the next free locations, we first need to increment
+	// it to get the next taken location
+	cpu->sp++;
+	(*clock)++;
+
+	BYTE data = memory->data[STACK_OFFSET + cpu->sp];
+	(*clock)++;
+
+	// TODO: Where does an extra cycle come from??
+	(*clock)++;
+
+	return data;
+}
+
 void byte_write(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory)
 {
 	/*
@@ -543,6 +551,19 @@ void byte_write(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory)
 
 	memory->data[address] = value;
 	cpu->pc++;
+	(*clock)++;
+}
+
+void byte_push(int *clock, BYTE data, CPU *cpu, MEMORY *memory)
+{
+	/*
+	 * Pushes a byte of data to the stack
+	*/
+
+	memory->data[STACK_OFFSET + cpu->sp] = data;
+	(*clock)++;
+
+	cpu->sp--;
 	(*clock)++;
 }
 

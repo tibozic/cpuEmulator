@@ -124,7 +124,9 @@ int instruction_execute(CPU *cpu, MEMORY *memory);
 /* Byte */
 BYTE byte_fetch(int *clock, CPU *cpu, MEMORY *memory);
 BYTE byte_read(int *clock, WORD address, MEMORY *memory);
+BYTE byte_pop(int *clock, CPU *cpu, MEMORY *memory);
 void byte_write(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory);
+void byte_push(int *clock, BYTE data, CPU *cpu, MEMORY *memory);
 
 /* Word */
 WORD word_fetch(int *clock, CPU *cpu, MEMORY *memory);

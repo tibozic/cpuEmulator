@@ -105,6 +105,7 @@ typedef struct
 #define INS_PLA			0x68
 // TODO: Implement the INS_PHP
 #define INS_PHP			0x08
+#define INS_PLP			0x28
 
 #define INS_JSR			0x20
 

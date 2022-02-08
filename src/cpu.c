@@ -30,6 +30,8 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 	WORD abs_addressx;
 	bool crossed_page_boundry;
 
+	BYTE temp_data;
+
 	bool ended = false;
 	int clock = 0;
 
@@ -459,6 +461,24 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 				cpu->a = byte_pop(&clock, cpu, memory);
 
 				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
+			case INS_PLP:
+			{
+				temp_data = byte_pop(&clock, cpu, memory);
+
+				printf("Stack data: %d\n", temp_data);
+
+				cpu_set_flags_stack(cpu, temp_data);
+
+				break;
+			}
+			case INS_AND_IM:
+			{
+				temp_data = byte_read(&clock, cpu->pc, memory);
+
+				(void) temp_data;
 
 				break;
 			}

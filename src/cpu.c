@@ -474,6 +474,22 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_PHP:
+			{
+				temp_data = 0x0;
+
+				temp_data = (temp_data | cpu->c) << 1;
+				temp_data = (temp_data | cpu->z) << 1;
+				temp_data = (temp_data | cpu->i) << 1;
+				temp_data = (temp_data | cpu->d) << 1;
+				temp_data = (temp_data | cpu->b) << 1;
+				temp_data = (temp_data | cpu->v) << 1;
+				temp_data = (temp_data | cpu->n) << 1;
+
+				byte_push(&clock, temp_data, cpu, memory);
+
+				break;
+			}
 			case INS_AND_IM:
 			{
 				temp_data = byte_read(&clock, cpu->pc, memory);

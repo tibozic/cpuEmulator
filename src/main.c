@@ -1885,11 +1885,12 @@ void test_pla(CPU cpu, MEMORY memory)
 
 	memory.data[0xFFFC] = INS_PLA;
 	memory.data[STACK_OFFSET + cpu.sp] = 0x12;
+	cpu.sp--;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(cpu.a, memory.data[STACK_OFFSET + 0xFF]);
-	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(number_of_instructions, 4);
 
 	TEST_END();
 
@@ -1899,11 +1900,12 @@ void test_pla(CPU cpu, MEMORY memory)
 
 	memory.data[0xFFFC] = INS_PLA;
 	memory.data[STACK_OFFSET + cpu.sp] = 0x42;
+	cpu.sp--;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(cpu.a, memory.data[STACK_OFFSET + 0xFF]);
-	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(number_of_instructions, 4);
 	EXPECT_TRUE(cpu.n);
 
 	TEST_END();
@@ -1914,11 +1916,16 @@ void test_pla(CPU cpu, MEMORY memory)
 
 	memory.data[0xFFFC] = INS_PLA;
 	memory.data[STACK_OFFSET + cpu.sp] = 0x0;
+	cpu.sp--;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(cpu.a, memory.data[STACK_OFFSET + 0xFF]);
-	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_TRUE(cpu.z);
+
+	TEST_END();
+}
 	EXPECT_TRUE(cpu.z);
 
 	TEST_END();

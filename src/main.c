@@ -54,6 +54,7 @@ void test_tsx(CPU cpu, MEMORY memory);
 /* Tests for stack instructions */
 void test_pha(CPU cpu, MEMORY memory);
 void test_pla(CPU cpu, MEMORY memory);
+void test_php(CPU cpu, MEMORY memory);
 void test_plp(CPU cpu, MEMORY memory);
 
 int main(void)
@@ -107,6 +108,7 @@ int main(void)
 	test_pha(cpu, memory);
 	test_pla(cpu, memory);
 	test_plp(cpu, memory);
+	test_php(cpu, memory);
 
 	report_print();
 }
@@ -1971,5 +1973,53 @@ void test_plp(CPU cpu, MEMORY memory)
 	TEST_END();
 }
 
+void test_php(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("PHP - All FALSE");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.c = 0;
+	cpu.z = 0;
+	cpu.i = 0;
+	cpu.d = 0;
+	cpu.b = 0;
+	cpu.v = 0;
+	cpu.n = 0;
+
+	memory.data[0xFFFC] = INS_PHP;
+	memory.data[0xFFFD] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(memory.data[0xFFFD], 0);
+	EXPECT_EQ(number_of_instructions, 3);
+
+	TEST_END();
+
+	TEST_START("PHP - All TRUE");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.c = 1;
+	cpu.z = 1;
+	cpu.i = 1;
+	cpu.d = 1;
+	cpu.b = 1;
+	cpu.v = 1;
+	cpu.n = 1;
+
+	memory.data[0xFFFC] = INS_PHP;
+	memory.data[0xFFFD] = 0xF;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(memory.data[0xFFFD], 0xF);
+	EXPECT_EQ(number_of_instructions, 3);
+
+	TEST_END();
+}
 	TEST_END();
 }

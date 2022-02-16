@@ -57,6 +57,9 @@ void test_pla(CPU cpu, MEMORY memory);
 void test_php(CPU cpu, MEMORY memory);
 void test_plp(CPU cpu, MEMORY memory);
 
+/* Tests for logical operatiosn */
+void test_and_im(CPU cpu, MEMORY memory);
+
 int main(void)
 {
 	CPU cpu;
@@ -109,6 +112,8 @@ int main(void)
 	test_pla(cpu, memory);
 	test_plp(cpu, memory);
 	test_php(cpu, memory);
+
+	test_and_im(cpu, memory);
 
 	report_print();
 }
@@ -2021,5 +2026,34 @@ void test_php(CPU cpu, MEMORY memory)
 
 	TEST_END();
 }
+
+void test_and_im(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("AND - TRUE");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_AND_IM;
+	memory.data[0xFFFD] = 0x12;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x12);
+	EXPECT_EQ(number_of_instructions, 2);
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x5;
+	memory.data[0xFFFC] = INS_AND_IM;
+	memory.data[0xFFFD] = 0x3;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(cpu.a, 0x1);
+	EXPECT_EQ(number_of_instructions, 2);
+
 	TEST_END();
 }

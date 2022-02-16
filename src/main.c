@@ -61,6 +61,7 @@ void test_plp(CPU cpu, MEMORY memory);
 /* AND */
 void test_and_im(CPU cpu, MEMORY memory);
 void test_and_zp(CPU cpu, MEMORY memory);
+void test_and_zpx(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -117,6 +118,7 @@ int main(void)
 
 	test_and_im(cpu, memory);
 	test_and_zp(cpu, memory);
+	test_and_zpx(cpu, memory);
 
 	report_print();
 }
@@ -2110,6 +2112,62 @@ void test_and_zp(CPU cpu, MEMORY memory)
 
 	EXPECT_EQ(number_of_instructions, 3);
 	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+}
+
+void test_and_zpx(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("AND ZPX - NOT A MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.x = 0x15;
+	cpu.a = 0x5;
+	memory.data[0xFFFC] = INS_AND_ZPX;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[(0x42 + cpu.x)] = 0x3;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("AND ZPX - MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.x = 0x15;
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_AND_ZPX;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[(0x42 + cpu.x)] = 0x12;
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x12);
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	TEST_END();
+
+	TEST_START("AND ZPX - NOT A MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.x = 0x15;
+	cpu.a = 0x12;
+	memory.data[0xFFFC] = INS_AND_ZPX;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[(0x42 + cpu.x)] = 0x0;
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x0);
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	TEST_END();
 }

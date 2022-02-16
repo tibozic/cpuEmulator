@@ -250,7 +250,7 @@ void test_lda_zpx(CPU cpu, MEMORY memory)
 
 	TEST_END();
 
-	TEST_START("LDA  Zero page X - zero");
+	TEST_START("LDA Zero page X - zero");
 
 	cpu_reset(&cpu, &memory);
 	cpu.x = 0x7;
@@ -2065,38 +2065,46 @@ void test_and_zp(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	TEST_START("AND - ZP");
+	TEST_START("AND ZP - NOT A MATCH");
 
 	cpu_reset(&cpu, &memory);
 
 	cpu.a = 0x5;
-	memory.data[0xFFC] = INS_AND_ZP;
-	memory.data[0xFFD] = 0x0042;
-	memory.data[0xFFD] = 0x0003;
+	memory.data[0xFFFC] = INS_AND_ZP;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x42] = 0x03;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(number_of_instructions, 3);
 	EXPECT_EQ(cpu.a, 0x1);
 
+	TEST_END();
+
+	TEST_START("AND ZP - MATCH");
+
 	cpu_reset(&cpu, &memory);
 
 	cpu.a = 0x12;
-	memory.data[0xFFC] = INS_AND_ZP;
-	memory.data[0xFFD] = 0x0042;
-	memory.data[0xFFD] = 0x0012;
+	memory.data[0xFFFC] = INS_AND_ZP;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x42] = 0x12;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(number_of_instructions, 3);
 	EXPECT_EQ(cpu.a, 0x12);
 
+	TEST_END();
+
+	TEST_START("AND ZP - NO SAME BITS");
+
 	cpu_reset(&cpu, &memory);
 
 	cpu.a = 0x12;
-	memory.data[0xFFC] = INS_AND_ZP;
-	memory.data[0xFFD] = 0x0042;
-	memory.data[0xFFD] = 0x0000;
+	memory.data[0xFFFC] = INS_AND_ZP;
+	memory.data[0xFFFD] = 0x42;
+	memory.data[0x42] = 0x00;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
@@ -2104,5 +2112,4 @@ void test_and_zp(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, 0x0);
 
 	TEST_END();
-
 }

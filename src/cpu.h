@@ -108,7 +108,9 @@ typedef struct
 #define INS_PLP			0x28
 
 /* Logical operations */
-#define INS_AND_IM 0x29
+/* AND */
+#define INS_AND_IM		0x29
+#define INS_AND_ZP		0x25
 
 #define INS_JSR			0x20
 

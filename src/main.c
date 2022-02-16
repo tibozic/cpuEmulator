@@ -58,7 +58,9 @@ void test_php(CPU cpu, MEMORY memory);
 void test_plp(CPU cpu, MEMORY memory);
 
 /* Tests for logical operatiosn */
+/* AND */
 void test_and_im(CPU cpu, MEMORY memory);
+void test_and_zp(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -114,6 +116,7 @@ int main(void)
 	test_php(cpu, memory);
 
 	test_and_im(cpu, memory);
+	test_and_zp(cpu, memory);
 
 	report_print();
 }
@@ -2031,7 +2034,7 @@ void test_and_im(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	TEST_START("AND - TRUE");
+	TEST_START("AND - IMMEDIATE");
 
 	cpu_reset(&cpu, &memory);
 
@@ -2056,4 +2059,50 @@ void test_and_im(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 2);
 
 	TEST_END();
+}
+
+void test_and_zp(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("AND - ZP");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x5;
+	memory.data[0xFFC] = INS_AND_ZP;
+	memory.data[0xFFD] = 0x0042;
+	memory.data[0xFFD] = 0x0003;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x12;
+	memory.data[0xFFC] = INS_AND_ZP;
+	memory.data[0xFFD] = 0x0042;
+	memory.data[0xFFD] = 0x0012;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(cpu.a, 0x12);
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x12;
+	memory.data[0xFFC] = INS_AND_ZP;
+	memory.data[0xFFD] = 0x0042;
+	memory.data[0xFFD] = 0x0000;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+
 }

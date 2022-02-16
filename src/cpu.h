@@ -107,6 +107,9 @@ typedef struct
 #define INS_PHP			0x08
 #define INS_PLP			0x28
 
+/* Logical operations */
+#define INS_AND_IM 0x29
+
 #define INS_JSR			0x20
 
 

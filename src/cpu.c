@@ -498,9 +498,9 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 			}
 			case INS_AND_IM:
 			{
-				temp_data = byte_read(&clock, cpu->pc, memory);
+				cpu->a &= byte_read(&clock, cpu->pc, memory);
 
-				(void) temp_data;
+				cpu_ld_set_flags(cpu, cpu->a);
 
 				break;
 			}

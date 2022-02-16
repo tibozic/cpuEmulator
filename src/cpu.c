@@ -468,7 +468,6 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 			{
 				temp_data = byte_pop(&clock, cpu, memory);
 
-				printf("Stack data: %d\n", temp_data);
 
 				cpu->c = (temp_data & 0b00000001) > 0;
 				cpu->z = (temp_data & 0b00000010) > 0;
@@ -499,6 +498,18 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 			case INS_AND_IM:
 			{
 				cpu->a &= byte_read(&clock, cpu->pc, memory);
+
+				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
+			case INS_AND_ZP:
+			{
+				zp_address = byte_fetch(&clock, cpu, memory);
+
+				temp_data = byte_read(&clock, zp_address, memory);
+
+				cpu->a &= temp_data;
 
 				cpu_ld_set_flags(cpu, cpu->a);
 

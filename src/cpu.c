@@ -504,10 +504,25 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 				break;
 			}
 			case INS_AND_ZP:
-			{
+		{
 				zp_address = byte_fetch(&clock, cpu, memory);
 
 				temp_data = byte_read(&clock, zp_address, memory);
+
+				cpu->a &= temp_data;
+
+				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
+			case INS_AND_ZPX:
+			{
+				zp_address = byte_fetch(&clock, cpu, memory);
+
+				zp_addressx = zp_address + cpu->x;
+				clock++;
+
+				temp_data = byte_read(&clock, zp_addressx, memory);
 
 				cpu->a &= temp_data;
 

@@ -2260,17 +2260,17 @@ void test_and_absx(CPU cpu, MEMORY memory)
 
 	cpu_reset(&cpu, &memory);
 
-	cpu.a = 0x5;
+	cpu.a = 0x12;
 	cpu.x = 0x15;
 	memory.data[0xFFFC] = INS_AND_ABSX;
 	memory.data[0xFFFD] = 0x34;
 	memory.data[0xFFFE] = 0x12;
-	memory.data[(0x1234 + cpu.x)] = 0x3;
+	memory.data[(0x1234 + cpu.x)] = 0x12;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(number_of_instructions, 4);
-	EXPECT_EQ(cpu.a, 0x1);
+	EXPECT_EQ(cpu.a, 0x12);
 
 	TEST_END();
 
@@ -2283,12 +2283,12 @@ void test_and_absx(CPU cpu, MEMORY memory)
 	memory.data[0xFFFC] = INS_AND_ABSX;
 	memory.data[0xFFFD] = 0x34;
 	memory.data[0xFFFE] = 0x12;
-	memory.data[(0x1234 + cpu.x)] = 0x3;
+	memory.data[(0x1234 + cpu.x)] = 0x0;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(number_of_instructions, 4);
-	EXPECT_EQ(cpu.a, 0x1);
+	EXPECT_EQ(cpu.a, 0x0);
 
 	TEST_END();
 

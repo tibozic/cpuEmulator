@@ -2147,10 +2147,10 @@ void test_and_zpx(CPU cpu, MEMORY memory)
 	memory.data[0xFFFD] = 0x42;
 	memory.data[(0x42 + cpu.x)] = 0x12;
 
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
 	EXPECT_EQ(number_of_instructions, 4);
 	EXPECT_EQ(cpu.a, 0x12);
-
-	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	TEST_END();
 
@@ -2164,10 +2164,11 @@ void test_and_zpx(CPU cpu, MEMORY memory)
 	memory.data[0xFFFD] = 0x42;
 	memory.data[(0x42 + cpu.x)] = 0x0;
 
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
 	EXPECT_EQ(number_of_instructions, 4);
 	EXPECT_EQ(cpu.a, 0x0);
 
-	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	TEST_END();
 }

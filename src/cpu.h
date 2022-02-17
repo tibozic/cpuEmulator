@@ -114,6 +114,7 @@ typedef struct
 #define INS_AND_ZPX		0x35
 #define INS_AND_ABS		0x2D
 #define INS_AND_ABSX	0x3D
+#define INS_AND_ABSY	0x39
 
 #define INS_JSR			0x20
 

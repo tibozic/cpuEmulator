@@ -112,6 +112,7 @@ typedef struct
 #define INS_AND_IM		0x29
 #define INS_AND_ZP		0x25
 #define INS_AND_ZPX		0x35
+#define INS_AND_ABS		0x2D
 
 #define INS_JSR			0x20
 

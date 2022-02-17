@@ -62,6 +62,7 @@ void test_plp(CPU cpu, MEMORY memory);
 void test_and_im(CPU cpu, MEMORY memory);
 void test_and_zp(CPU cpu, MEMORY memory);
 void test_and_zpx(CPU cpu, MEMORY memory);
+void test_and_abs(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -119,6 +120,7 @@ int main(void)
 	test_and_im(cpu, memory);
 	test_and_zp(cpu, memory);
 	test_and_zpx(cpu, memory);
+	test_and_abs(cpu, memory);
 
 	report_print();
 }
@@ -2169,6 +2171,62 @@ void test_and_zpx(CPU cpu, MEMORY memory)
 	EXPECT_EQ(number_of_instructions, 4);
 	EXPECT_EQ(cpu.a, 0x0);
 
+
+	TEST_END();
+}
+
+void test_and_abs(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("AND ABS - NOT A MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x5;
+	memory.data[0xFFFC] = INS_AND_ABS;
+	memory.data[0xFFFD] = 0x34;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1234] = 0x3;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("AND ABS - MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x5;
+	memory.data[0xFFFC] = INS_AND_ABS;
+	memory.data[0xFFFD] = 0x34;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1234] = 0x3;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("AND ABS - NO EQAUL BITS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x5;
+	memory.data[0xFFFC] = INS_AND_ABS;
+	memory.data[0xFFFD] = 0x34;
+	memory.data[0xFFFE] = 0x12;
+	memory.data[0x1234] = 0x3;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x1);
 
 	TEST_END();
 }

@@ -66,6 +66,7 @@ void test_and_abs(CPU cpu, MEMORY memory);
 void test_and_absx(CPU cpu, MEMORY memory);
 void test_and_absy(CPU cpu, MEMORY memory);
 void test_and_indx(CPU cpu, MEMORY memory);
+void test_and_indy(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -127,6 +128,7 @@ int main(void)
 	test_and_absx(cpu, memory);
 	test_and_absy(cpu, memory);
 	test_and_indx(cpu, memory);
+	test_and_indy(cpu, memory);
 
 	report_print();
 }
@@ -2447,6 +2449,87 @@ void test_and_indx(CPU cpu, MEMORY memory)
 	memory.data[0x0006] = 0x00;
 	memory.data[0x0007] = 0x80;
 	memory.data[0x8000] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 6);
+	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+}
+
+void test_and_indy(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("AND INDY - MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.y = 0x04;
+	cpu.a = 0x15;
+	memory.data[0xFFFC] = INS_AND_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0x00;
+	memory.data[0x0003] = 0x80;
+	memory.data[0x8004] = 0x15;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 5);
+	EXPECT_EQ(cpu.a, 0x15);
+
+	TEST_END();
+
+	TEST_START("AND INDY - NOT A MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.y = 0x04;
+	cpu.a = 0x3;
+	memory.data[0xFFFC] = INS_AND_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0x00;
+	memory.data[0x0003] = 0x80;
+	memory.data[0x8004] = 0x5;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 5);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("AND INDY - NO EQUAL BITS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.y = 0x04;
+	cpu.a = 0x5;
+	memory.data[0xFFFC] = INS_AND_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0x00;
+	memory.data[0x0003] = 0x80;
+	memory.data[0x8004] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 5);
+	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+
+	TEST_START("AND INDY - PAGE CROSSED");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.y = 0x04;
+	cpu.a = 0x5;
+	memory.data[0xFFFC] = INS_AND_INDY;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0002] = 0xFF;
+	memory.data[0x0003] = 0x00;
+	memory.data[0x00FF + cpu.y] = 0x0;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 

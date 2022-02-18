@@ -65,6 +65,7 @@ void test_and_zpx(CPU cpu, MEMORY memory);
 void test_and_abs(CPU cpu, MEMORY memory);
 void test_and_absx(CPU cpu, MEMORY memory);
 void test_and_absy(CPU cpu, MEMORY memory);
+void test_and_indx(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -125,6 +126,7 @@ int main(void)
 	test_and_abs(cpu, memory);
 	test_and_absx(cpu, memory);
 	test_and_absy(cpu, memory);
+	test_and_indx(cpu, memory);
 
 	report_print();
 }
@@ -2387,6 +2389,69 @@ void test_and_absy(CPU cpu, MEMORY memory)
 
 	EXPECT_EQ(number_of_instructions, 5);
 	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+}
+
+void test_and_indx(CPU cpu, MEMORY memory)
+{
+
+	int number_of_instructions;
+
+	TEST_START("AND Indirect X - MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x15;
+	cpu.x = 0x04;
+	memory.data[0xFFFC] = INS_AND_INDX;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0006] = 0x00;
+	memory.data[0x0007] = 0x80;
+	memory.data[0x8000] = 0x15;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 6);
+	EXPECT_EQ(cpu.a, 0x15);
+
+	TEST_END();
+
+	TEST_START("AND Indirect X - NOT A MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x5;
+	cpu.x = 0x04;
+	memory.data[0xFFFC] = INS_AND_INDX;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0006] = 0x00;
+	memory.data[0x0007] = 0x80;
+	memory.data[0x8000] = 0x3;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 6);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("AND Indirect X - NO EQUAL BITS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x3;
+	cpu.x = 0x04;
+	memory.data[0xFFFC] = INS_AND_INDX;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0006] = 0x00;
+	memory.data[0x0007] = 0x80;
+	memory.data[0x8000] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 6);
+	EXPECT_EQ(cpu.a, 0x0);
 
 	TEST_END();
 }

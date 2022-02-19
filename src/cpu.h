@@ -119,6 +119,7 @@ typedef struct
 
 /* EOR */
 #define INS_EOR_IM		0x49
+#define INS_EOR_ZP		0x45
 
 #define INS_JSR			0x20
 

@@ -68,6 +68,10 @@ void test_and_absy(CPU cpu, MEMORY memory);
 void test_and_indx(CPU cpu, MEMORY memory);
 void test_and_indy(CPU cpu, MEMORY memory);
 
+/* EOR */
+void test_eor_im(CPU cpu, MEMORY memory);
+
+
 int main(void)
 {
 	CPU cpu;
@@ -129,6 +133,8 @@ int main(void)
 	test_and_absy(cpu, memory);
 	test_and_indx(cpu, memory);
 	test_and_indy(cpu, memory);
+
+	test_eor_im(cpu, memory);
 
 	report_print();
 }
@@ -2535,6 +2541,56 @@ void test_and_indy(CPU cpu, MEMORY memory)
 
 	EXPECT_EQ(number_of_instructions, 6);
 	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+}
+
+void test_eor_im(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("EOR IMMEDIATE - EQUAL NUMBERS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x15;
+	memory.data[0xFFFC] = INS_EOR_IM;
+	memory.data[0xFFFD] = 0x15;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+
+	TEST_START("EOR IMMEDIATE - 1 BIT MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x1;
+	memory.data[0xFFFC] = INS_EOR_IM;
+	memory.data[0xFFFD] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("EOR IMMEDIATE - NO MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 85;
+	memory.data[0xFFFC] = INS_EOR_IM;
+	memory.data[0xFFFD] = 42;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_EQ(cpu.a, 127);
 
 	TEST_END();
 }

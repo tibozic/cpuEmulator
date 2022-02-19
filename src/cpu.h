@@ -117,6 +117,9 @@ typedef struct
 #define INS_AND_INDX	0x21
 #define INS_AND_INDY	0x31
 
+/* EOR */
+#define INS_EOR_IM		0x49
+
 #define INS_JSR			0x20
 
 

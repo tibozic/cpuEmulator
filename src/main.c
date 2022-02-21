@@ -2677,6 +2677,7 @@ void test_eor_zpx(CPU cpu, MEMORY memory)
 	cpu_reset(&cpu, &memory);
 
 	cpu.a = 0x1;
+	cpu.x = 0x13;
 	memory.data[0xFFFC] = INS_EOR_ZPX;
 	memory.data[0xFFFD] = 0x15;
 	memory.data[0x0015 + cpu.x] = 0x0;
@@ -2693,6 +2694,7 @@ void test_eor_zpx(CPU cpu, MEMORY memory)
 	cpu_reset(&cpu, &memory);
 
 	cpu.a = 85;
+	cpu.x = 0x13;
 	memory.data[0xFFFC] = INS_EOR_ZPX;
 	memory.data[0xFFFD] = 0x15;
 	memory.data[0x0015 + cpu.x] = 42;

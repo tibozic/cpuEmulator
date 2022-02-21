@@ -669,8 +669,20 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_EOR_ABSX:
+			{
+				abs_address = word_fetch(&clock, cpu, memory);
 
-				temp_data = byte_read(&clock, abs_address, memory);
+				abs_addressx = abs_address + cpu->x;
+				clock++;
+
+				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
+				if ( !crossed_page_boundry )
+				{
+					clock--;
+				}
+
+				temp_data = byte_read(&clock, abs_addressx, memory);
 
 				cpu->a ^= temp_data;
 

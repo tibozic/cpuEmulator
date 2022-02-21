@@ -642,6 +642,21 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_EOR_ZPX:
+			{
+				zp_address = byte_fetch(&clock, cpu, memory);
+
+				zp_addressx = zp_address + cpu->x;
+				clock++;
+
+				temp_data = byte_read(&clock, zp_addressx, memory);
+
+				cpu->a ^= temp_data;
+
+				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

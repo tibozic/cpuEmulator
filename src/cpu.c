@@ -657,6 +657,20 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_EOR_ABS:
+			{
+				abs_address = word_fetch(&clock, cpu, memory);
+
+				printf("Address: 0x%x\n", abs_address);
+
+				temp_data = byte_read(&clock, abs_address, memory);
+
+				cpu->a ^= temp_data;
+
+				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

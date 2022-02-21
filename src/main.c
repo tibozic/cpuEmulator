@@ -71,7 +71,7 @@ void test_and_indy(CPU cpu, MEMORY memory);
 /* EOR */
 void test_eor_im(CPU cpu, MEMORY memory);
 void test_eor_zp(CPU cpu, MEMORY memory);
-
+void test_eor_zpx(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -137,6 +137,7 @@ int main(void)
 
 	test_eor_im(cpu, memory);
 	test_eor_zp(cpu, memory);
+	test_eor_zpx(cpu, memory);
 
 	report_print();
 }
@@ -2645,6 +2646,60 @@ void test_eor_zp(CPU cpu, MEMORY memory)
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(number_of_instructions, 3);
+	EXPECT_EQ(cpu.a, 127);
+
+	TEST_END();
+}
+
+void test_eor_zpx(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("EOR ZERO PAGE X - EQUAL NUMBERS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x15;
+	cpu.x = 0x13;
+	memory.data[0xFFFC] = INS_EOR_ZPX;
+	memory.data[0xFFFD] = 0x15;
+	memory.data[0x0015 + cpu.x] = 0x15;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+
+	TEST_START("EOR ZERO PAGE X - 1 BIT MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x1;
+	memory.data[0xFFFC] = INS_EOR_ZPX;
+	memory.data[0xFFFD] = 0x15;
+	memory.data[0x0015 + cpu.x] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("EOR ZERO PAGE X - NO MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 85;
+	memory.data[0xFFFC] = INS_EOR_ZPX;
+	memory.data[0xFFFD] = 0x15;
+	memory.data[0x0015 + cpu.x] = 42;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
 	EXPECT_EQ(cpu.a, 127);
 
 	TEST_END();

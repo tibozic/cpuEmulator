@@ -75,6 +75,7 @@ void test_eor_zpx(CPU cpu, MEMORY memory);
 void test_eor_abs(CPU cpu, MEMORY memory);
 void test_eor_absx(CPU cpu, MEMORY memory);
 void test_eor_absy(CPU cpu, MEMORY memory);
+void test_eor_indx(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -144,6 +145,7 @@ int main(void)
 	test_eor_abs(cpu, memory);
 	test_eor_absx(cpu, memory);
 	test_eor_absy(cpu, memory);
+	test_eor_indx(cpu, memory);
 
 	report_print();
 }
@@ -2916,6 +2918,69 @@ void test_eor_absy(CPU cpu, MEMORY memory)
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(number_of_instructions, 5);
+	EXPECT_EQ(cpu.a, 127);
+
+	TEST_END();
+}
+
+void test_eor_indx(CPU cpu, MEMORY memory)
+{
+
+	int number_of_instructions;
+
+	TEST_START("EOR Indirect X - EQUAL NUMBERS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x15;
+	cpu.x = 0x04;
+	memory.data[0xFFFC] = INS_EOR_INDX;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0006] = 0x00;
+	memory.data[0x0007] = 0x80;
+	memory.data[0x8000] = 0x15;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 6);
+	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+
+	TEST_START("EOR Indirect X - 1 BIT MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x1;
+	cpu.x = 0x04;
+	memory.data[0xFFFC] = INS_EOR_INDX;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0006] = 0x00;
+	memory.data[0x0007] = 0x80;
+	memory.data[0x8000] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 6);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("EOR Indirect X - NO MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 85;
+	cpu.x = 0x04;
+	memory.data[0xFFFC] = INS_EOR_INDX;
+	memory.data[0xFFFD] = 0x02;
+	memory.data[0x0006] = 0x00;
+	memory.data[0x0007] = 0x80;
+	memory.data[0x8000] = 42;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 6);
 	EXPECT_EQ(cpu.a, 127);
 
 	TEST_END();

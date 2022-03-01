@@ -2849,7 +2849,7 @@ void test_eor_absy(CPU cpu, MEMORY memory)
 {
 	int number_of_instructions;
 
-	TEST_START("EOR ABSOLUTE X - EQUAL NUMBERS");
+	TEST_START("EOR ABSOLUTE Y - EQUAL NUMBERS");
 
 	cpu_reset(&cpu, &memory);
 
@@ -2867,7 +2867,7 @@ void test_eor_absy(CPU cpu, MEMORY memory)
 
 	TEST_END();
 
-	TEST_START("EOR ABSOLUTE X - 1 BIT MATCH");
+	TEST_START("EOR ABSOLUTE Y - 1 BIT MATCH");
 
 	cpu_reset(&cpu, &memory);
 
@@ -2885,7 +2885,7 @@ void test_eor_absy(CPU cpu, MEMORY memory)
 
 	TEST_END();
 
-	TEST_START("EOR ABSOLUTE X - NO MATCH");
+	TEST_START("EOR ABSOLUTE Y - NO MATCH");
 
 	cpu_reset(&cpu, &memory);
 
@@ -2902,7 +2902,7 @@ void test_eor_absy(CPU cpu, MEMORY memory)
 	EXPECT_EQ(cpu.a, 127);
 
 	TEST_END();
-	TEST_START("EOR ABSOLUTE X - PAGE CROSSED");
+	TEST_START("EOR ABSOLUTE Y - PAGE CROSSED");
 
 	cpu_reset(&cpu, &memory);
 

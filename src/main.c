@@ -74,6 +74,7 @@ void test_eor_zp(CPU cpu, MEMORY memory);
 void test_eor_zpx(CPU cpu, MEMORY memory);
 void test_eor_abs(CPU cpu, MEMORY memory);
 void test_eor_absx(CPU cpu, MEMORY memory);
+void test_eor_absy(CPU cpu, MEMORY memory);
 
 int main(void)
 {
@@ -142,6 +143,7 @@ int main(void)
 	test_eor_zpx(cpu, memory);
 	test_eor_abs(cpu, memory);
 	test_eor_absx(cpu, memory);
+	test_eor_absy(cpu, memory);
 
 	report_print();
 }
@@ -2834,6 +2836,82 @@ void test_eor_absx(CPU cpu, MEMORY memory)
 	memory.data[0xFFFD] = 0xFF;
 	memory.data[0xFFFE] = 0x00;
 	memory.data[0x00FF + cpu.x] = 42;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 5);
+	EXPECT_EQ(cpu.a, 127);
+
+	TEST_END();
+}
+
+void test_eor_absy(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("EOR ABSOLUTE X - EQUAL NUMBERS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x15;
+	cpu.y = 0x15;
+	memory.data[0xFFFC] = INS_EOR_ABSY;
+	memory.data[0xFFFD] = 0x12;
+	memory.data[0xFFFE] = 0x34;
+	memory.data[0x3412 + cpu.y] = 0x15;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x0);
+
+	TEST_END();
+
+	TEST_START("EOR ABSOLUTE X - 1 BIT MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x1;
+	cpu.y = 0x15;
+	memory.data[0xFFFC] = INS_EOR_ABSY;
+	memory.data[0xFFFD] = 0x12;
+	memory.data[0xFFFE] = 0x34;
+	memory.data[0x3412 + cpu.y] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("EOR ABSOLUTE X - NO MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 85;
+	cpu.y = 0x15;
+	memory.data[0xFFFC] = INS_EOR_ABSY;
+	memory.data[0xFFFD] = 0x12;
+	memory.data[0xFFFE] = 0x34;
+	memory.data[0x3412 + cpu.y] = 42;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 4);
+	EXPECT_EQ(cpu.a, 127);
+
+	TEST_END();
+	TEST_START("EOR ABSOLUTE X - PAGE CROSSED");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 85;
+	cpu.y = 0x15;
+	memory.data[0xFFFC] = INS_EOR_ABSY;
+	memory.data[0xFFFD] = 0xFF;
+	memory.data[0xFFFE] = 0x00;
+	memory.data[0x00FF + cpu.y] = 42;
 
 	number_of_instructions = instruction_execute(&cpu, &memory);
 

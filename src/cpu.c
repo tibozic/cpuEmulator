@@ -728,6 +728,27 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_EOR_INDY:
+			{
+				zp_address = byte_fetch(&clock, cpu, memory);
+
+				abs_address = word_read(&clock, zp_address, memory);
+
+				abs_addressx = abs_address + cpu->y;
+				clock++;
+
+				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
+				if ( !crossed_page_boundry )
+				{
+					clock--;
+				}
+
+				cpu->a ^= byte_read(&clock, abs_addressx, memory);
+
+				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

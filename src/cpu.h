@@ -125,6 +125,7 @@ typedef struct
 #define INS_EOR_ABSX	0x5D
 #define INS_EOR_ABSY	0x59
 #define INS_EOR_INDX	0x41
+#define INS_EOR_INDY	0x51
 
 #define INS_JSR			0x20
 

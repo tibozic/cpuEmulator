@@ -780,14 +780,13 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 	return clock;
 }
 
+/*
+** Fetches a byte of data from memory and returns it
+** Uses 1 clock cycle
+** Increments the program counter by 1
+ */
 BYTE byte_fetch(int *clock, CPU *cpu, MEMORY *memory)
 {
-	/*
-	 * Fetches a byte from memory
-	 * Uses 1 clock cycle
-	 * Increments the program counter
-	*/
-
 	BYTE data = memory->data[cpu->pc];
 	cpu->pc++;
 	(*clock)++;
@@ -795,26 +794,26 @@ BYTE byte_fetch(int *clock, CPU *cpu, MEMORY *memory)
 	return data;
 }
 
+/*
+** Reads a byte of data from memory and returns it
+** Uses 1 clock cycle
+ */
 BYTE byte_read(int *clock, WORD address, MEMORY *memory)
 {
-	/*
-	 * Fetches a byte from memory
-	 * Uses 1 clock cylce
-	*/
-
 	BYTE data = memory->data[address];
 	(*clock)++;
 
 	return data;
 }
 
+/*
+** Pops a byte of data from the stack and returns it
+** Uses 3 clock cycles
+** Increments the stack pointer by 1
+*/
 BYTE byte_pop(int *clock, CPU *cpu, MEMORY *memory)
 {
-	/*
-	 * Pops a byte of data from the stack
-	*/
-
-	// SP is pointing at the next free locations, we first need to increment
+	// SP is pointing at the next free location, we first need to increment
 	// it to get the next taken location
 	cpu->sp++;
 	(*clock)++;
@@ -828,25 +827,25 @@ BYTE byte_pop(int *clock, CPU *cpu, MEMORY *memory)
 	return data;
 }
 
+/*
+** Writes a byte of data to memory
+** Uses 1 clock cycle
+** Increments the program counter by 1
+*/
 void byte_write(int *clock, WORD address, BYTE value, CPU *cpu, MEMORY *memory)
 {
-	/*
-	 * Writes a byte to memory
-	 * Uses 1 clock cycle
-	 * Increments the program counter
-	*/
-
 	memory->data[address] = value;
 	cpu->pc++;
 	(*clock)++;
 }
 
+/*
+** Pushes a byte of data to the stack
+** Uses 2 clock cycles
+** Decrements the stack pointer by 1
+*/
 void byte_push(int *clock, BYTE data, CPU *cpu, MEMORY *memory)
 {
-	/*
-	 * Pushes a byte of data to the stack
-	*/
-
 	memory->data[STACK_OFFSET + cpu->sp] = data;
 	(*clock)++;
 
@@ -854,14 +853,13 @@ void byte_push(int *clock, BYTE data, CPU *cpu, MEMORY *memory)
 	(*clock)++;
 }
 
+/*
+** Fetches a word of data from memory and returns it
+** Uses 2 clock cycles
+** Increments the program counter by 2
+*/
 WORD word_fetch(int *clock, CPU *cpu, MEMORY *memory)
 {
-	/*
-	 * Fetches a word from memory
-	 * Uses 2 clock cycles
-	 * Increments the program counter
-	*/
-
 	// Little endian
 	WORD data = memory->data[cpu->pc];
 	cpu->pc++;
@@ -874,13 +872,12 @@ WORD word_fetch(int *clock, CPU *cpu, MEMORY *memory)
 	return data;
 }
 
+/*
+** Reads a word of data from memory and returns it
+** Uses 2 clock cycles
+*/
 WORD word_read(int *clock, WORD address, MEMORY *memory)
 {
-	/*
-	 * Fetches a word from memory
-	 * Uses 2 clock cycles
-	*/
-
 	WORD data = memory->data[address];
 	(*clock)++;
 
@@ -890,32 +887,33 @@ WORD word_read(int *clock, WORD address, MEMORY *memory)
 	return data;
 }
 
+/*
+** Writes a word of data to memory
+** Uses 2 clock cycles
+*/
 void word_write(int *clock, WORD address, WORD value, MEMORY *memory)
 {
-	/*
-	 * Writes a word to memory
-	 * Uses 2 clock cycles
-	*/
-
 	memory->data[address] = (value & 0xFF);
 	(*clock)++;
 	memory->data[address + 1] = (value >> 8);
 	(*clock)++;
-
 }
 
+/*
+** Sets the appropriate flags when loading data to a register
+*/
 void cpu_ld_set_flags(CPU *cpu, BYTE register_data)
 {
-	/*
-	 * Sets the appropriate flags when loading to a register
-	*/
-
 	cpu->z = (register_data == 0);
 
 	/* if 7th bit of register is 1, the number is negative */
 	cpu->n = ((register_data & (1 << 6)) > 0);
 }
 
+/*
+** Prints current memory data
+** Input is from where to where to print
+*/
 void memory_print(MEMORY *memory, int start, int end)
 {
 	assert(end <= MEMORY_SIZE);

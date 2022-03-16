@@ -153,6 +153,7 @@ typedef struct
 
 /* ORA */
 #define INS_ORA_IM		0x09
+#define INS_ORA_ZP		0x05
 
 #define INS_JSR			0x20
 

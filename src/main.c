@@ -78,6 +78,9 @@ void test_eor_absy(CPU cpu, MEMORY memory);
 void test_eor_indx(CPU cpu, MEMORY memory);
 void test_eor_indy(CPU cpu, MEMORY memory);
 
+/* ORA */
+void test_ora_im(CPU cpu, MEMORY memory);
+
 int main(void)
 {
 	CPU cpu;
@@ -148,6 +151,8 @@ int main(void)
 	test_eor_absy(cpu, memory);
 	test_eor_indx(cpu, memory);
 	test_eor_indy(cpu, memory);
+
+	test_ora_im(cpu, memory);
 
 	report_print();
 }
@@ -3064,6 +3069,56 @@ void test_eor_indy(CPU cpu, MEMORY memory)
 	number_of_instructions = instruction_execute(&cpu, &memory);
 
 	EXPECT_EQ(number_of_instructions, 6);
+	EXPECT_EQ(cpu.a, 127);
+
+	TEST_END();
+}
+
+void test_ora_im(CPU cpu, MEMORY memory)
+{
+	int number_of_instructions;
+
+	TEST_START("ORA IMMEDIATE - EQUAL NUMBERS");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x15;
+	memory.data[0xFFFC] = INS_ORA_IM;
+	memory.data[0xFFFD] = 0x15;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_EQ(cpu.a, 0x15);
+
+	TEST_END();
+
+	TEST_START("ORA IMMEDIATE - 1 BIT MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 0x1;
+	memory.data[0xFFFC] = INS_ORA_IM;
+	memory.data[0xFFFD] = 0x0;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 2);
+	EXPECT_EQ(cpu.a, 0x1);
+
+	TEST_END();
+
+	TEST_START("ORA IMMEDIATE - NO MATCH");
+
+	cpu_reset(&cpu, &memory);
+
+	cpu.a = 85;
+	memory.data[0xFFFC] = INS_ORA_IM;
+	memory.data[0xFFFD] = 42;
+
+	number_of_instructions = instruction_execute(&cpu, &memory);
+
+	EXPECT_EQ(number_of_instructions, 2);
 	EXPECT_EQ(cpu.a, 127);
 
 	TEST_END();

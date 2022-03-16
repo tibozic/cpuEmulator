@@ -820,6 +820,27 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_ORA_ABSX:
+			{
+				abs_address = word_fetch(&clock, cpu, memory);
+
+				abs_addressx = abs_address + cpu->x;
+				clock++;
+
+				crossed_page_boundry = (abs_address ^ abs_addressx) >> 8;
+				if ( !crossed_page_boundry )
+				{
+					clock--;
+				}
+
+				temp_data = byte_read(&clock, abs_addressx, memory);
+
+				cpu->a |= temp_data;
+
+				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

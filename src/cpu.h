@@ -155,6 +155,7 @@ typedef struct
 #define INS_ORA_IM		0x09
 #define INS_ORA_ZP		0x05
 #define INS_ORA_ZPX		0x15
+#define INS_ORA_ABS		0x0D
 
 #define INS_JSR			0x20
 

@@ -47,11 +47,11 @@ void memory_initialise(MEMORY *memory)
 
 int instruction_execute(CPU *cpu, MEMORY *memory)
 {
-BYTE instruction;
-BYTE zp_address;
-BYTE zp_addressx;
-WORD abs_address;
-WORD abs_addressx;
+	BYTE instruction;
+	BYTE zp_address;
+	BYTE zp_addressx;
+	WORD abs_address;
+	WORD abs_addressx;
 	bool crossed_page_boundry;
 
 	BYTE temp_data;

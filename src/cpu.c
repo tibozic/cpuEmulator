@@ -781,6 +781,18 @@ int instruction_execute(CPU *cpu, MEMORY *memory)
 
 				break;
 			}
+			case INS_ORA_ZP:
+			{
+				zp_address = byte_fetch(&clock, cpu, memory);
+
+				temp_data = byte_read(&clock, zp_address, memory);
+
+				cpu->a |= temp_data;
+
+				cpu_ld_set_flags(cpu, cpu->a);
+
+				break;
+			}
 			case INS_JSR:
 			{
 				abs_address = word_fetch(&clock, cpu, memory);

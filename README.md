@@ -1,12 +1,26 @@
 # CPU emulator in C
+The purpose of this project is to improve my knowledge of some low-level concepts and the workings
+of a CPU, and to get some C programming experience other than the basic print or array-sorting exercises.
 
-## More info
-The CPU we are emulating is 6502. <br>
-This CPU is little endian. <br>
+## More information
+I will be trying to emulate a 6502 CPU. <br>
+The goal is to understand how most of the instructions work and support them. <br>
+
+My main reference was [6502 Introduction](#6502-intro), which lists all the instructions, what each
+instruction does and how it works (what flags it effects). <br>
+When I got stuck I also used [this youtube playlist](#youtube-playlist) which is doing the same thing I am
+but in C++. <br>
+
+## Files
+/cpu.c\/cpu.h/ are the main CPU emulation files. <br>
+/main.c/ is includes tests for the basic functionality. <br>
+/makefile/ compiles the files on linux. <br>
+/mytests.c/mytests.h/ a [simple tests library](#). <br>
 
 ## Sources:
-<a name="6502-intro">https://web.archive.org/web/20210909190432/http://www.obelisk.me.uk/6502/</a> <br>
-<a name="youtube-playlist">https://youtube.com/playlist?list=PLLwK93hM93Z13TRzPx9JqTIn33feefl37</a> <br>
+6502 Introduction: <a name="6502-intro">https://web.archive.org/web/20210909190432/http://www.obelisk.me.uk/6502/</a> <br>
+6502 CPU Emulator in C++: <a name="youtube-playlist"> https://youtube.com/playlist?list=PLLwK93hM93Z13TRzPx9JqTIn33feefl37 </a> <br>
+Google <br>
 
 ## Some other interesting/useful things:
 https://www.reddit.com/r/C_Programming/comments/9dzkhw/how_would_one_write_an_emulator_in_c/ <br>

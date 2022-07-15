@@ -12,10 +12,10 @@ When I got stuck I also used [this youtube playlist](#youtube-playlist) which is
 but in C++. <br>
 
 ## Files
-/cpu.c\/cpu.h/ are the main CPU emulation files. <br>
-/main.c/ is includes tests for the basic functionality. <br>
-/makefile/ compiles the files on linux. <br>
-/mytests.c/mytests.h/ a [simple tests library](#). <br>
+*cpu.c\/cpu.h* are the main CPU emulation files. <br>
+*main.c* is includes tests for the basic functionality. <br>
+*makefile* compiles the files on linux. <br>
+*mytests.c/mytests.h* a [simple tests library](#). <br>
 
 ## Sources:
 6502 Introduction: <a name="6502-intro">https://web.archive.org/web/20210909190432/http://www.obelisk.me.uk/6502/</a> <br>

@@ -167,7 +167,7 @@ void cpu_reset(CPU *cpu, MEMORY *memory);
 void cpu_ld_set_flags(CPU *cpu, BYTE register_data);
 
 /* Memory */
-void memory_initialise(MEMORY *memory);
+void memory_initialize(MEMORY *memory);
 void memory_print(MEMORY *memory, int start, int end);
 
 int instruction_execute(CPU *cpu, MEMORY *memory);

@@ -33,10 +33,10 @@ void cpu_reset(CPU *cpu, MEMORY *memory)
 
 	cpu->d = 0;
 
-	memory_initialise(memory);
+	memory_initialize(memory);
 }
 
-void memory_initialise(MEMORY *memory)
+void memory_initialize(MEMORY *memory)
 {
 	/* Initialise all memory to zero */
 	for (unsigned int i = 0; i < MEMORY_SIZE; ++i)
